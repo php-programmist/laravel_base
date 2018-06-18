@@ -29,6 +29,6 @@ class AdminController extends Controller
 		    return redirect('/login');
 	    }
 	
-	    return view('admin');
+	    return view('layouts.admin', [ 'title' => 'Панель управления' ]);
     }
 }
