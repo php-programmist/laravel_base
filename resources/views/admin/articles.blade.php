@@ -26,7 +26,7 @@
         @endif
 
         @if ($articles)
-            <table class="table table-responsive">
+            <table class="table table-responsive table-hover">
                 <tr>
                     <th>Id</th>
                     <th>{{__('system.title')}}</th>
@@ -46,6 +46,7 @@
                     </tr>
                 @endforeach
             </table>
+            <div class="center">{{ $articles->links() }}</div>
         @endif
 
     </div>

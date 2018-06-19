@@ -10,7 +10,7 @@
 	
 	class AdminArticleController extends Controller {
 		public function list() {
-			$articles = Article::all();
+			$articles = Article::orderBy('id')->paginate(10);
 			$articles->load('user');
 			$title = __('article.articles_list');
 			
@@ -43,18 +43,12 @@
 			
 			$user = Auth::user();
 			
-			$data = $request->validated();
+			$data = $request->all();
 			
 			$article = Article::find($data['id']);
 			
 			if ( $request->user()->can('update', $article) ) {
-				$article->name       = $data['name'];
-				$article->alias      = $data['alias'];
-				$article->image      = $data['image'];
-				$article->intro_text = $data['intro_text'];
-				$article->full_text  = $data['full_text'];
-				$article->state      = $data['state'];
-				
+				$article->fill($data);
 				$user->articles()->save($article);
 				if ( $data['task'] == 'apply' ) {
 					return redirect()->back()->with('message', __('article.article_updated'));
@@ -74,18 +68,11 @@
 				return redirect()->back()->with([ 'message' => __('article.not_allowed_create') ])->withInput();
 			}
 			
-			
+			$data = $request->all();
+			$article->fill($data);
 			$user = Auth::user();
-			$data = $request->validated();
+			$user->articles()->save($article);
 			
-			$article->name       = $data['name'];
-			$article->alias      = $data['alias'];
-			$article->image      = $data['image'];
-			$article->intro_text = $data['intro_text'];
-			$article->full_text  = $data['full_text'];
-			$article->state      = (int) $data['state'];
-			$article->user_id    = $user->id;
-			$article->save();
 			$article_id = $article->id;
 			
 			if ( $data['task'] == 'apply' ) {
