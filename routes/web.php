@@ -20,11 +20,11 @@
 	});
 	
 	Route::group([ 'middleware' => [ 'web', 'auth' ], 'prefix' => 'admin' ], function () {
-		Route::get('/', 'AdminController@index')->name('admin');
-		Route::get('/articles', 'AdminArticleController@list')->name('articles');
-		Route::get('/articles/edit/{id}', 'AdminArticleController@index')->name('article_update');
-		Route::get('/articles/edit', 'AdminArticleController@index')->name('article_new');
-		Route::post('/articles/edit', 'AdminArticleController@save')->name('article_save');
+		Route::get('/dashboard', 'AdminController@index')->name('admin.dashboard');
+		Route::get('/articles', 'AdminArticleController@list')->name('admin.articles');
+		Route::get('/articles/edit/{id}', 'AdminArticleController@index')->name('admin.article_update');
+		Route::get('/articles/edit', 'AdminArticleController@index')->name('admin.article_new');
+		Route::post('/articles/edit', 'AdminArticleController@save')->name('admin.article_save');
 		
 	});
 	

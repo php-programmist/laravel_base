@@ -23,23 +23,25 @@
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Laravel Project:</a>
+                <a class="navbar-brand" href="#">{{ config('app.name', 'Laravel') }}:</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ route('home')}}">Главная</a></li>
-                    <li class="active"><a href="{{ route('admin')}}">Панель управления</a></li>
-                    <li><a href="{{ route('articles')}}">Статьи</a></li>
+                    <li><a href="{{ route('home')}}">{{__('system.home')}}</a></li>
+                    <li class="{!! classActivePath('admin.dashboard') !!}"><a
+                                href="{{ route('admin.dashboard')}}">{{__('system.dashboard')}}</a></li>
+                    <li class="{!! classActivePath('admin.articles') !!}"><a
+                                href="{{ route('admin.articles')}}">{{__('system.articles')}}</a></li>
                 </ul>
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav ml-auto">
                     <!-- Authentication Links -->
                     @guest
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('system.Login') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                            <a class="nav-link" href="{{ route('register') }}">{{ __('system.Register') }}</a>
                         </li>
                     @else
                         <li class="nav-item dropdown">
@@ -52,7 +54,7 @@
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
+                                    {{ __('system.Logout') }}
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST"

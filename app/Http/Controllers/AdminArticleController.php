@@ -11,7 +11,7 @@
 		public function list() {
 			$articles = Article::all();
 			$articles->load('user');
-			$title = "Список статей";
+			$title = __('article.articles_list');
 			
 			return view('admin.articles', [ 'title' => $title, 'articles' => $articles ]);
 		}
@@ -19,11 +19,11 @@
 		public function index(Request $request, $id = 0) {
 			if ( $id ) {
 				$article = Article::find($id);
-				$title   = 'Редактирование статьи';
+				$title   = __('article.article_edit');
 			}
 			else {
 				$article = new Article();
-				$title   = 'Добавление статьи';
+				$title   = __('article.article_add');
 			}
 			
 			return view('admin.article', [ 'title' => $title, 'article' => $article ]);
@@ -59,21 +59,21 @@
 				
 				$res = $user->articles()->save($article);
 				if ( $data['task'] == 'apply' ) {
-					return redirect()->back()->with('message', 'Статья обновлена');
+					return redirect()->back()->with('message', __('article.article_updated'));
 				}
 				else {
-					return redirect()->route('articles')->with([ 'message' => 'Статья обновлена' ]);
+					return redirect()->route('admin.articles')->with([ 'message' => __('article.article_updated') ]);
 				}
 			}
 			
-			return redirect()->back()->with([ 'message' => 'У Вас нет прав редактировать данную статью' ])->withInput();
+			return redirect()->back()->with([ 'message' => __('article.not_allowed_update') ])->withInput();
 		}
 		
 		public function create(Request $request) {
 			$article = new Article();
 			
 			if ( $request->user()->cannot('add', $article) ) {
-				return redirect()->back()->with([ 'message' => 'Вы не можете создавать статьи' ])->withInput();
+				return redirect()->back()->with([ 'message' => __('article.not_allowed_create') ])->withInput();
 			}
 			
 			$this->validate($request, [
@@ -94,10 +94,10 @@
 			$article_id = $article->id;
 			
 			if ( $data['task'] == 'apply' ) {
-				return redirect()->route('article_update', [ 'id' => $article_id ])->with([ 'message' => 'Статья добавлена. ID - ' . $article_id ]);
+				return redirect()->route('admin.article_update', [ 'id' => $article_id ])->with([ 'message' => __('article.article_created') ]);
 			}
 			else {
-				return redirect()->route('articles')->with([ 'message' => 'Статья добавлена.' ]);
+				return redirect()->route('admin.articles')->with([ 'message' => __('article.article_created') ]);
 			}
 			
 		}
