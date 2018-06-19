@@ -2,10 +2,11 @@
 	
 	namespace App\Http\Controllers;
 	
-	use Illuminate\Http\Request;
-	use App\User;
+	//use Illuminate\Http\Request;
+	//use App\User;
 	use App\Article;
 	use Auth;
+	use App\Http\Requests\AdminArticleRequest;
 	
 	class AdminArticleController extends Controller {
 		public function list() {
@@ -16,7 +17,7 @@
 			return view('admin.articles', [ 'title' => $title, 'articles' => $articles ]);
 		}
 		
-		public function index(Request $request, $id = 0) {
+		public function index($id = 0) {
 			if ( $id ) {
 				$article = Article::find($id);
 				$title   = __('article.article_edit');
@@ -29,7 +30,7 @@
 			return view('admin.article', [ 'title' => $title, 'article' => $article ]);
 		}
 		
-		public function save(Request $request) {
+		public function save(AdminArticleRequest $request) {
 			if ( $request->filled('id') ) {
 				return $this->update($request);
 			}
@@ -38,14 +39,11 @@
 			}
 		}
 		
-		public function update(Request $request) {
-			$this->validate($request, [
-				'name' => 'required',
-			]);
+		public function update(AdminArticleRequest $request) {
 			
 			$user = Auth::user();
 			
-			$data = $request->except('_token');
+			$data = $request->validated();
 			
 			$article = Article::find($data['id']);
 			
@@ -57,7 +55,7 @@
 				$article->full_text  = $data['full_text'];
 				$article->state      = $data['state'];
 				
-				$res = $user->articles()->save($article);
+				$user->articles()->save($article);
 				if ( $data['task'] == 'apply' ) {
 					return redirect()->back()->with('message', __('article.article_updated'));
 				}
@@ -69,19 +67,16 @@
 			return redirect()->back()->with([ 'message' => __('article.not_allowed_update') ])->withInput();
 		}
 		
-		public function create(Request $request) {
+		public function create(AdminArticleRequest $request) {
 			$article = new Article();
 			
 			if ( $request->user()->cannot('add', $article) ) {
 				return redirect()->back()->with([ 'message' => __('article.not_allowed_create') ])->withInput();
 			}
 			
-			$this->validate($request, [
-				'name' => 'required',
-			]);
 			
 			$user = Auth::user();
-			$data = $request->all();
+			$data = $request->validated();
 			
 			$article->name       = $data['name'];
 			$article->alias      = $data['alias'];
