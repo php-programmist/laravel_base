@@ -49,6 +49,7 @@
 			
 			if ( $request->user()->can('update', $article) ) {
 				$article->fill($data);
+				$article->prepare();
 				$user->articles()->save($article);
 				if ( $data['task'] == 'apply' ) {
 					return redirect()->back()->with('message', __('article.article_updated'));
@@ -70,6 +71,7 @@
 			
 			$data = $request->all();
 			$article->fill($data);
+			$article->prepare();
 			$user = Auth::user();
 			$user->articles()->save($article);
 			

@@ -13,15 +13,14 @@
 			return $this->belongsTo('App\User');
 		}
 		
-		public function fill(array $attributes) {
-			$model = parent::fill($attributes);
-			if ( empty($model->alias) ) {
-				$model->alias = Str::slug($model->name);
+		public function prepare() {
+			if ( empty($this->alias) AND !empty($this->name) ) {
+				$this->alias = Str::slug($this->name);
 			}
-			if ( empty($model->state) ) {
-				$model->state = 0;
+			if ( empty($this->state) ) {
+				$this->state = 0;
 			}
 			
-			return $model;
+			return $this;
 		}
 	}

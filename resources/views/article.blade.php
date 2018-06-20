@@ -1,0 +1,40 @@
+@extends('layouts.blog')
+
+@section('content')
+    @if ($article)
+
+        <!-- Blog Post -->
+        <article class="card mb-4">
+            <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">
+            <div class="card-body">
+                <header>
+                    <h2 class="card-title">
+                        {{ $article->name }}</a>
+                    </h2>
+                </header>
+                <p class="card-text">
+                    @if($article->intro_text)
+                        {{ $article->intro_text }}
+                    @endif
+                    {{ $article->full_text }}
+
+                </p>
+
+            </div>
+
+            <footer class="card-footer text-muted">
+                <time datetime="{{ date("Y-m-d\TH:i",strtotime($article->created_at)) }}">
+                    {{ date("d.m.Y H:i",strtotime($article->created_at)) }}
+                </time>
+                <div class="author">{{ __('article.author') }}: {{ $article->user->name }}</div>
+                <a href="{{ url()->previous() }}">
+                    <button class="btn btn-primary">&larr; {{ __('article.back') }} </button>
+                </a>
+            </footer>
+
+        </article>
+
+    @endif
+
+
+@endsection

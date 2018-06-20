@@ -11,17 +11,18 @@
 	|
 	*/
 	
-	Route::get('/', function () {
-		return view('welcome');
-	})->name('home');
 	
 	Route::group([ 'middleware' => [ 'web' ], ], function () {
 		/** @noinspection PhpUndefinedMethodInspection */
 		Auth::routes();
-		
+		Route::get('/', 'ArticleController@index')->name('home');
+		Route::get('articles/{slug}', 'ArticleController@show')->name('articles');
 	});
 	
 	Route::group([ 'middleware' => [ 'web', 'auth' ], 'prefix' => 'admin', 'as' => 'admin.' ], function () {
+		Route::get('/', function () {
+			return redirect()->route('admin.dashboard');
+		});
 		Route::get('/dashboard', 'AdminController@index')->name('dashboard');
 		Route::get('/articles', 'AdminArticleController@list')->name('articles');
 		Route::get('/articles/edit/{id}', 'AdminArticleController@index')->name('article_update');
