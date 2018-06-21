@@ -14,9 +14,9 @@
                 </header>
                 <p class="card-text">
                     @if($article->intro_text)
-                        {{ $article->intro_text }}
+                        {!! $article->intro_text !!}
                     @endif
-                    {{ $article->full_text }}
+                    {!! $article->full_text  !!}
 
                 </p>
 

@@ -4,7 +4,7 @@
     <a href="{{ route('admin.article_new') }}">
         <button class="btn-success">{{__('system.add')}}</button>
     </a>
-@endsection;
+@endsection
 
 @section('content')
 
@@ -19,14 +19,12 @@
             </div>
         @endif
 
-        @if (session('message'))
-            <div class="alert alert-success">
-                {{ session('message') }}
-            </div>
+        @if (Session::has('message'))
+            <div class="alert alert-info">{{ Session::get('message') }}</div>
         @endif
 
         @if ($articles)
-            <table class="table table-responsive table-hover">
+            <table class="table table-striped table-bordered">
                 <tr>
                     <th>Id</th>
                     <th>{{__('system.title')}}</th>

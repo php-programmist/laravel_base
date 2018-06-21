@@ -1,9 +1,7 @@
 @extends('layouts.blog')
 
 @section('content')
-    <h1 class="my-4">Статьи
-
-    </h1>
+    <h1 class="my-4">Статьи</h1>
 
     @if ($articles)
 
@@ -22,7 +20,7 @@
 
                     @if($article->intro_text)
                         <p class="card-text">
-                            {{ $article->intro_text }}
+                            {!! $article->intro_text !!}
                         </p>
 
                         <a href="{{ route('articles',$article->id.'-'.$article->alias) }}">
@@ -30,7 +28,7 @@
                         </a>
                     @else
                         <p class="card-text">
-                            {{ $article->full_text }}
+                            {!! $article->full_text !!}
                         </p>
                     @endif
 

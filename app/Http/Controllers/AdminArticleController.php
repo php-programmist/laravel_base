@@ -8,13 +8,17 @@
 	use Auth;
 	use App\Http\Requests\AdminArticleRequest;
 	
+	/*TODO переделать статьи под CRUD*/
 	class AdminArticleController extends Controller {
 		public function list() {
 			$articles = Article::orderBy('id')->paginate(10);
 			$articles->load('user');
 			$title = __('article.articles_list');
 			
-			return view('admin.articles', [ 'title' => $title, 'articles' => $articles ]);
+			return view('admin.articles', [
+				'title'    => $title,
+				'articles' => $articles,
+			]);
 		}
 		
 		public function index($id = 0) {
@@ -27,7 +31,10 @@
 				$title   = __('article.article_add');
 			}
 			
-			return view('admin.article', [ 'title' => $title, 'article' => $article ]);
+			return view('admin.article', [
+				'title'   => $title,
+				'article' => $article,
+			]);
 		}
 		
 		public function save(AdminArticleRequest $request) {

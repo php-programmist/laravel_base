@@ -38,7 +38,7 @@
 		 * @return bool
 		 */
 		public function hasRole($role) {
-			$groups = $this->groups();
+			$groups = $this->groups;
 			foreach ($groups as $group) {
 				if ( $group->name == $role ) {
 					return true;
@@ -47,6 +47,7 @@
 			
 			return false;
 		}
+		
 		
 		public function groups() {
 			return $this->belongsToMany('App\Group');

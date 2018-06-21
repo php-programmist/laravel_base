@@ -21,13 +21,15 @@
 	
 	Route::group([ 'middleware' => [ 'web', 'auth' ], 'prefix' => 'admin', 'as' => 'admin.' ], function () {
 		Route::get('/', function () {
-			return redirect()->route('admin.dashboard');
+			return redirect()->route('admin.users.index');
 		});
-		Route::get('/dashboard', 'AdminController@index')->name('dashboard');
-		Route::get('/articles', 'AdminArticleController@list')->name('articles');
-		Route::get('/articles/edit/{id}', 'AdminArticleController@index')->name('article_update');
-		Route::get('/articles/edit', 'AdminArticleController@index')->name('article_new');
-		Route::post('/articles/edit', 'AdminArticleController@save')->name('article_save');
-		
+		//Route::get('/dashboard', 'AdminController@index')->name('dashboard');
+		Route::group([ 'prefix' => 'articles' ], function () {
+			Route::get('/', 'AdminArticleController@list')->name('articles');
+			Route::get('/edit/{id}', 'AdminArticleController@index')->name('article_update');
+			Route::get('/edit', 'AdminArticleController@index')->name('article_new');
+			Route::post('/edit', 'AdminArticleController@save')->name('article_save');
+		});
+		Route::resource('/users', 'AdminUserController');
 	});
 	
