@@ -10,7 +10,9 @@
 
             <!-- Blog Post -->
             <article class="card mb-4">
-                <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">
+                @if($article->image)
+                    {{ Html::image('images/'.$article->image,$article->name,['class'=> 'card-img-top'] ) }}
+                @endif
                 <div class="card-body">
                     <header>
                         <h2 class="card-title">

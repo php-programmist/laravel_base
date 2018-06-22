@@ -7,12 +7,13 @@
 	use App\Article;
 	use Auth;
 	use App\Http\Requests\AdminArticleRequest;
+	use Intervention\Image\Facades\Image;
 	
 	class AdminArticleController extends Controller {
 		public function index() {
 			$articles = Article::orderBy('id')->paginate(10);
 			$articles->load('user');
-			$title = __('article.articles_list');
+			$title = __('system.articles_list');
 			
 			return view('admin.articles', [
 				'title'    => $title,
@@ -50,13 +51,39 @@
 		public function update(AdminArticleRequest $request, $id) {
 			
 			$user = Auth::user();
-			
-			$data = $request->all();
-			
 			$article = Article::find($id);
 			if ( $request->user()->cannot('update', $article) ) {
 				return redirect()->back()->with([ 'message' => __('article.not_allowed_update') ])->withInput();
 			}
+			
+			$data = $request->all();
+			$file = $request->file('image');
+			
+			if ( $file ) {
+				if ( !strstr($file->getClientMimeType(), 'image/') ) {
+					unset($data['image']);
+				}
+				else {
+					$image = Image::make($file);
+					$image->fit(750, 300, function ($constraint) {
+						$constraint->upsize();
+					});
+					$image_name = time() . '_' . $file->getClientOriginalName();
+					
+					$image->save(public_path('images') . DIRECTORY_SEPARATOR . $image_name);
+					$data['image'] = $image_name;
+					/*Удаляем старое изображение*/
+					if ( $article->image ) {
+						if ( file_exists(public_path('images') . DIRECTORY_SEPARATOR . $article->image) ) {
+							unlink(public_path('images') . DIRECTORY_SEPARATOR . $article->image);
+						}
+					}
+				}
+			}
+			else {
+				unset($data['image']);
+			}
+			
 			$article->fill($data);
 			$article->prepare();
 			$user->articles()->save($article);
@@ -78,6 +105,13 @@
 			}
 			
 			$data = $request->all();
+			if ( $request->filled('image') ) {
+				$image = Image::make($request->file('image')->getClientOriginalName());
+				dd($image);
+			}
+			else {
+				unset($data['image']);
+			}
 			$article->fill($data);
 			$article->prepare();//TODO добавить загрузку изображений
 			$user = Auth::user();

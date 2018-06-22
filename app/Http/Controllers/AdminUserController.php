@@ -18,7 +18,7 @@
 			$users->load('groups');
 			
 			return view('admin.users', [
-				'title' => __('system.users'),
+				'title' => __('system.users_list'),
 				'users' => $users,
 			]);
 		}

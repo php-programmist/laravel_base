@@ -6,75 +6,105 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title }}</title>
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-    <!-- Latest compiled and minified CSS -->
+{{--<script src="{{ asset('js/app.js') }}" defer></script>--}}
+<!-- Latest compiled and minified CSS -->
+    <!-- Bootstrap core JavaScript -->
+    <script src="{{ asset('jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap.js') }}"></script>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
           integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-    <!-- Bootstrap core JavaScript -->
-    <script src="{{ asset('jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('js/admin.js') }}"></script>
+
     <!-- Latest compiled and minified JavaScript -->
 {{--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
         crossorigin="anonymous"></script>--}}
     <!-- Styles -->
     <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
-    {{--<link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">--}}
+    {{--<link href="{{ asset('bootstrap/css/bootstrap.css') }}" rel="stylesheet">--}}
 </head>
 <body>
 
 @section('navbar')
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">{{ config('app.name', 'Laravel') }}:</a>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">{{ config('app.name', 'Laravel') }}</a>
             </div>
-            <div id="navbar" class="navbar-collapse collapse">
+
+
+            <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ route('home')}}">{{__('system.home')}}</a></li>
-                    <li class="{!! classActivePath('admin.users') !!}"><a
-                                href="{{ route('admin.users.index')}}">{{__('system.users')}}</a></li>
-                    <li class="{!! classActivePath('admin.articles') !!}"><a
-                                href="{{ route('admin.articles.index')}}">{{__('system.articles')}}</a></li>
+                    <li><a target="_blank" href="{{ route('home')}}">{{__('system.home')}}</a></li>
+                    <li class="dropdown {!! classActivePath('admin.users') !!}">
+                        <a class="dropdown-toggle"
+                           data-toggle="dropdown"
+                           href="{{ route('admin.users.index')}}">
+                            {{__('system.users')}} <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="{!! classActivePath('admin.users') !!}"><a
+                                        href="{{ route('admin.users.index')}}">
+                                    {{__('system.users_list')}}
+                                </a>
+                            </li>
+                            <li><a href="#">Группы</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown {!! classActivePath('admin.articles') !!}">
+                        <a class="dropdown-toggle"
+                           data-toggle="dropdown"
+                           href="{{ route('admin.articles.index')}}">
+                            {{__('system.articles')}} <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="{!! classActivePath('admin.articles') !!}"><a
+                                        href="{{ route('admin.articles.index')}}">
+                                    {{__('system.articles_list')}}
+                                </a>
+                            </li>
+                            <li><a href="#">Категории</a></li>
+                        </ul>
+                    </li>
 
                 </ul>
-                <!-- Right Side Of Navbar -->
-                <ul class="nav navbar-nav ml-auto">
-                    <!-- Authentication Links -->
-                    @guest
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">{{ __('system.Login') }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">{{ __('system.Register') }}</a>
-                        </li>
-                    @else
-                        <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {{ Auth::user()->name }} <span class="caret"></span>
-                            </a>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ Auth::user()->name }} <span class="caret"></span>
+                        </a>
 
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <ul class="dropdown-menu{{-- dropdown-menu-right--}}" aria-labelledby="navbarDropdown">
+                            <li>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                     {{ __('system.Logout') }}
                                 </a>
-
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                      style="display: none;">
-                                    @csrf
-                                </form>
-                            </div>
-                        </li>
-                    @endguest
+                            </li>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                  style="display: none;">
+                                @csrf
+                            </form>
+                        </ul>
+                    </li>
                 </ul>
-            </div><!--/.navbar-collapse -->
-        </div>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
     </nav>
+
+
 @show
 
 @section('header')
@@ -107,5 +137,7 @@
     </footer>
 </div>
 
+
+<script src="{{ asset('js/admin.js') }}"></script>
 </body>
 </html>

@@ -38,16 +38,21 @@
             </div>
         @endif
 
-
+        @if($article->image)
+            <div class="mb-4">
+                {{ Html::image('images/'.$article->image,$article->name ) }}
+            </div>
+        @endif
         @if($article->id)
             {!! Form::model($article,[
                 'id'=>'adminForm',
                 'route' => [
                     'admin.articles.update',
                     'article'=>$article->id,
-                    'files'=>true,
+
                 ],
                 'method'=>'put',
+                'files'=>true,
             ]) !!}
         @else
             {!! Form::model($article,[
