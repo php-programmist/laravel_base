@@ -51,7 +51,7 @@
                                 <button type="submit" class="btn btn-xs btn-danger">{{ __('system.delete') }}</button>
                             </form>
                         </td>
-                        {{--TODO Вывести группы пользователей--}}
+
                     </tr>
                 @endforeach
             </table>

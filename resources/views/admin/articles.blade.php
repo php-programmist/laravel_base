@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('sidebar')
-    <a href="{{ route('admin.article_new') }}">
+    <a href="{{ route('admin.articles.create') }}">
         <button class="btn-success">{{__('system.add')}}</button>
     </a>
 @endsection
@@ -32,15 +32,24 @@
                     <th>{{__('system.state')}}</th>
                     <th>{{__('system.created_at')}}</th>
                     <th>{{__('system.updated_at')}}</th>
+                    <th></th>
                 </tr>
                 @foreach($articles as $article)
                     <tr>
                         <td>{{ $article->id }}</td>
-                        <td><a href="{{ route('admin.article_update',$article->id) }}">{{ $article->name }}</a></td>
+                        <td><a href="{{ route('admin.articles.edit',$article->id) }}">{{ $article->name }}</a></td>
                         <td>{{ $article->user->username }}</td>
                         <td>{{ $article->state?__('system.published'):__('system.unpublished') }}</td>
                         <td>{{ $article->created_at }}</td>
                         <td>{{ $article->updated_at }}</td>
+                        <td>
+                            <form action="{{ route('admin.articles.destroy',['article'=>$article->id]) }}"
+                                  method="post">
+                                {{csrf_field()}}
+                                {{ method_field('DELETE') }}
+                                <button type="submit" class="btn btn-xs btn-danger">{{ __('system.delete') }}</button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </table>

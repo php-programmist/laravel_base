@@ -37,7 +37,7 @@
                     <li class="{!! classActivePath('admin.users') !!}"><a
                                 href="{{ route('admin.users.index')}}">{{__('system.users')}}</a></li>
                     <li class="{!! classActivePath('admin.articles') !!}"><a
-                                href="{{ route('admin.articles')}}">{{__('system.articles')}}</a></li>
+                                href="{{ route('admin.articles.index')}}">{{__('system.articles')}}</a></li>
 
                 </ul>
                 <!-- Right Side Of Navbar -->

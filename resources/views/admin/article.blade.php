@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('sidebar')
-    <a href="{{ route('admin.articles') }}">
+    <a href="{{ route('admin.articles.index') }}">
         <button class="btn-danger">{{__('system.close')}}</button>
     </a>
     <br>
@@ -38,8 +38,27 @@
             </div>
         @endif
 
-        {!! Form::model($article,['id'=>'adminForm','files'=>true,'route' => ['admin.article_save','id'=>$article->id ]]) !!}
 
+        @if($article->id)
+            {!! Form::model($article,[
+                'id'=>'adminForm',
+                'route' => [
+                    'admin.articles.update',
+                    'article'=>$article->id,
+                    'files'=>true,
+                ],
+                'method'=>'put',
+            ]) !!}
+        @else
+            {!! Form::model($article,[
+                'id'=>'adminForm',
+                'route' => [
+                    'admin.articles.store',
+                ],
+                'method'=>'post',
+                'files'=>true,
+            ]) !!}
+        @endif
         <div class="form-group">
             {!! Form::label('name', __('system.title')) !!}
             {!! Form::text('name',NULL,['class' => 'form-control']) !!}
