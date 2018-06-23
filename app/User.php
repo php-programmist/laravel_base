@@ -30,6 +30,10 @@
 			return $this->hasMany('App\Article');
 		}
 		
+		public function comments() {
+			return $this->hasMany('App\Comments');
+		}
+		
 		/**
 		 * Check if User has some role
 		 *

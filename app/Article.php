@@ -15,6 +15,10 @@
 			return $this->belongsTo('App\User');
 		}
 		
+		public function comments() {
+			return $this->hasMany('App\Comment');
+		}
+		
 		public function prepare($request) {
 			if ( empty($this->alias) AND !empty($this->name) ) {
 				$this->alias = Str::slug($this->name);

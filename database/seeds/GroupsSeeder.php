@@ -43,5 +43,14 @@
 				'updated_at' => date("Y-m-d H:i:s"),
 			]);
 			
+			DB::table('categories')->insert([
+				'id'         => 1,
+				'title'      => 'Без категории',
+				'parent_id'  => 0,
+				'alias'      => 'uncategorised',
+				'created_at' => date("Y-m-d H:i:s"),
+				'updated_at' => date("Y-m-d H:i:s"),
+			]);
+			
 		}
 	}
