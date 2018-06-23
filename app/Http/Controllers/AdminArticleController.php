@@ -11,8 +11,11 @@
 	//use Intervention\Image\Facades\Image;
 	
 	class AdminArticleController extends Controller {
+		/**
+		 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+		 */
 		public function index() {
-			$articles = Article::orderBy('id')->paginate(10);
+			$articles = Article::orderBy('id')->paginate(config('settings.admin_pagination', 15));
 			$articles->load('user');
 			$title = __('system.articles_list');
 			
@@ -22,8 +25,12 @@
 			]);
 		}
 		
-		public function edit($id) {
-			$article = Article::find($id);
+		/**
+		 * @param Article $article
+		 *
+		 * @return $this|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+		 */
+		public function edit(Article $article) {
 			if ( \Auth::user()->cannot('update', $article) ) {
 				return redirect()->back()->with([ 'message' => __('article.not_allowed_update') ])->withInput();
 			}
@@ -36,6 +43,9 @@
 			]);
 		}
 		
+		/**
+		 * @return $this|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+		 */
 		public function create() {
 			$article = new Article();
 			if ( \Auth::user()->cannot('add', $article) ) {
@@ -49,10 +59,15 @@
 			]);
 		}
 		
-		public function update(AdminArticleRequest $request, $id) {
+		/**
+		 * @param AdminArticleRequest $request
+		 * @param Article             $article
+		 *
+		 * @return $this|\Illuminate\Http\RedirectResponse
+		 */
+		public function update(AdminArticleRequest $request, Article $article) {
 			
 			$user = Auth::user();
-			$article = Article::find($id);
 			if ( $request->user()->cannot('update', $article) ) {
 				return redirect()->back()->with([ 'message' => __('article.not_allowed_update') ])->withInput();
 			}
@@ -72,6 +87,11 @@
 			
 		}
 		
+		/**
+		 * @param AdminArticleRequest $request
+		 *
+		 * @return $this|\Illuminate\Http\RedirectResponse
+		 */
 		public function store(AdminArticleRequest $request) {
 			$article = new Article();
 			
@@ -100,18 +120,23 @@
 		/**
 		 * Remove the specified resource from storage.
 		 *
-		 * @param  int $id
+		 * @param Article $article
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function destroy($id) {
+		public function destroy(Article $article) {
 			if ( !\Auth::user()->hasRole('Super User') ) {
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete') ]);
 			}
 			
-			$article = Article::findOrFail($id);
+			//$article = Article::findOrFail($id);
 			
-			$article->destroy($id);
+			try {
+				$article->delete();
+			}
+			catch (\Exception $e) {
+				\Session::flash('error', $e->getMessage());
+			}
 			
 			return redirect()->back()->with([ 'message' => __('article.article_deleted') ]);
 		}

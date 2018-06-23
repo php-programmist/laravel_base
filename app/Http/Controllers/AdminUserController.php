@@ -14,7 +14,7 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function index() {
-			$users = User::paginate(10);
+			$users = User::paginate(config('settings.admin_pagination', 15));
 			$users->load('groups');
 			
 			return view('admin.users', [

@@ -35,17 +35,14 @@
 			}
 			
 			if ( strstr($route_name, 'update') ) {
-				$rules['username'] = [
-					'required',
-					'alpha_num',
-					'min:5',
-					Rule::unique('users')->ignore($this->user),
-				];
-				$rules['email']    = [
+				
+				$rules['username'] = 'required|alpha_num|unique:users,username,' . $this->user . '|min:5';
+				$rules['email']    = 'required|email|unique:users,email,' . $this->user;
+				/*$rules['email']    = [
 					'required',
 					'email',
 					Rule::unique('users')->ignore($this->user),
-				];
+				];*/
 				if ( $this->filled('password') ) {
 					$rules['password'] = 'min:6';
 				}

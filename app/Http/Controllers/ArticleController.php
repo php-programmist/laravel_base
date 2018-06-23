@@ -11,7 +11,7 @@
 			$page = $request->has('page') ? $request->query('page') : 1;
 			
 			$articles = Cache::remember('articles_' . $page, 10, function () {
-				$articles = Article::orderByDesc('id')->where([ 'state' => 1 ])->paginate(5);
+				$articles = Article::orderByDesc('id')->where([ 'state' => 1 ])->paginate(config('settings.site_pagination', 5));
 				$articles->load('user');
 				
 				return $articles;
