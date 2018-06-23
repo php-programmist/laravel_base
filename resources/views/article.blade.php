@@ -5,14 +5,14 @@
 
         <!-- Blog Post -->
         <article class="card mb-4">
-            @if($article->image)
+            @if($article->image AND file_exists(public_path('images').DIRECTORY_SEPARATOR.$article->image))
                 {{ Html::image('images/'.$article->image,$article->name,['class'=> 'card-img-top'] ) }}
             @endif
 
             <div class="card-body">
                 <header>
                     <h2 class="card-title">
-                        {{ $article->name }}</a>
+                        {{ $article->name }}
                     </h2>
                 </header>
                 <p class="card-text">

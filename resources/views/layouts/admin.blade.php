@@ -10,7 +10,11 @@
 <!-- Latest compiled and minified CSS -->
     <!-- Bootstrap core JavaScript -->
     <script src="{{ asset('jquery/jquery.min.js') }}"></script>
+    {{--<script src="{{ asset('jquery/jquery-1.11.0.min') }}"></script>--}}
     <script src="{{ asset('bootstrap/js/bootstrap.js') }}"></script>
+    {{--<script src="{{ asset('js/bootstrap.min.js') }}"></script>--}}
+
+    <script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
           integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -21,8 +25,10 @@
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
         crossorigin="anonymous"></script>--}}
     <!-- Styles -->
+    {{--<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">--}}
     <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
     {{--<link href="{{ asset('bootstrap/css/bootstrap.css') }}" rel="stylesheet">--}}
+
 </head>
 <body>
 
@@ -45,7 +51,7 @@
 
             <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a target="_blank" href="{{ route('home')}}">{{__('system.home')}}</a></li>
+
                     <li class="dropdown {!! classActivePath('admin.users') !!}">
                         <a class="dropdown-toggle"
                            data-toggle="dropdown"
@@ -79,6 +85,7 @@
 
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+                    <li><a target="_blank" href="{{ route('home')}}">{{__('system.home')}}</a></li>
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

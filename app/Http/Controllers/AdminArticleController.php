@@ -7,7 +7,8 @@
 	use App\Article;
 	use Auth;
 	use App\Http\Requests\AdminArticleRequest;
-	use Intervention\Image\Facades\Image;
+	
+	//use Intervention\Image\Facades\Image;
 	
 	class AdminArticleController extends Controller {
 		public function index() {
@@ -56,36 +57,10 @@
 				return redirect()->back()->with([ 'message' => __('article.not_allowed_update') ])->withInput();
 			}
 			
-			$data = $request->all();
-			$file = $request->file('image');
-			
-			if ( $file ) {
-				if ( !strstr($file->getClientMimeType(), 'image/') ) {
-					unset($data['image']);
-				}
-				else {
-					$image = Image::make($file);
-					$image->fit(750, 300, function ($constraint) {
-						$constraint->upsize();
-					});
-					$image_name = time() . '_' . $file->getClientOriginalName();
-					
-					$image->save(public_path('images') . DIRECTORY_SEPARATOR . $image_name);
-					$data['image'] = $image_name;
-					/*Удаляем старое изображение*/
-					if ( $article->image ) {
-						if ( file_exists(public_path('images') . DIRECTORY_SEPARATOR . $article->image) ) {
-							unlink(public_path('images') . DIRECTORY_SEPARATOR . $article->image);
-						}
-					}
-				}
-			}
-			else {
-				unset($data['image']);
-			}
+			$data = $request->except('image');
 			
 			$article->fill($data);
-			$article->prepare();
+			$article->prepare($request);
 			$user->articles()->save($article);
 			if ( $data['task'] == 'apply' ) {
 				return redirect()->back()->with('message', __('article.article_updated'));
@@ -104,16 +79,10 @@
 				return redirect()->back()->with([ 'message' => __('article.not_allowed_create') ])->withInput();
 			}
 			
-			$data = $request->all();
-			if ( $request->filled('image') ) {
-				$image = Image::make($request->file('image')->getClientOriginalName());
-				dd($image);
-			}
-			else {
-				unset($data['image']);
-			}
+			$data = $request->except('image');
+			
 			$article->fill($data);
-			$article->prepare();//TODO добавить загрузку изображений
+			$article->prepare($request);
 			$user = Auth::user();
 			$user->articles()->save($article);
 			
@@ -141,7 +110,6 @@
 			}
 			
 			$article = Article::findOrFail($id);
-			
 			
 			$article->destroy($id);
 			

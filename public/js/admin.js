@@ -6,7 +6,6 @@ function submit_button(task) {
 function onNavbar() {
 	if (window.innerWidth >= 768) {
 		$('.dropdown').on('mouseover', function () {
-			console.log(window.innerWidth);
 			$('.dropdown-toggle', this).next('.dropdown-menu').show();
 		}).on('mouseout', function () {
 			$('.dropdown-toggle', this).next('.dropdown-menu').hide();
@@ -17,7 +16,7 @@ function onNavbar() {
 			}
 		});
 	} else {
-		$('.dropdown-toggle .dropdown').off('mouseover').off('mouseout');
+		$('.dropdown').off('mouseover').off('mouseout');
 	}
 }
 

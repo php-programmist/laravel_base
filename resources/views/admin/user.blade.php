@@ -38,6 +38,7 @@
         @if($user->id)
             {!! Form::model($user,[
                 'id'=>'adminForm',
+                'class'=>'form-horizontal',
                 'route' => [
                     'admin.users.update',
                     'user'=>$user->id
@@ -47,6 +48,7 @@
         @else
             {!! Form::model($user,[
                 'id'=>'adminForm',
+                'class'=>'form-horizontal',
                 'route' => [
                     'admin.users.store',
                 ],
@@ -54,37 +56,50 @@
             ]) !!}
         @endif
         <div class="form-group">
-            {!! Form::label('name', __('system.name')) !!}
-            {!! Form::text('name',NULL,['class' => 'form-control']) !!}
+            {!! Form::label('name', __('system.name'),['class'=>'col-xs-2 control-label']) !!}
+            <div class="col-xs-8">
+                {!! Form::text('name',NULL,['class' => 'form-control']) !!}
+            </div>
         </div>
 
         <div class="form-group">
-            {!! Form::label('username', __('system.username')) !!}
-            {!! Form::text('username',NULL,['class' => 'form-control']) !!}
+            {!! Form::label('username', __('system.username'),['class'=>'col-xs-2 control-label']) !!}
+            <div class="col-xs-8">
+                {!! Form::text('username',NULL,['class' => 'form-control']) !!}
+            </div>
         </div>
 
         <div class="form-group">
-            {!! Form::label('email', __('system.email')) !!}
-            {!! Form::text('email',NULL,['class' => 'form-control']) !!}
+            {!! Form::label('email', __('system.email'),['class'=>'col-xs-2 control-label']) !!}
+            <div class="col-xs-8">
+                {!! Form::text('email',NULL,['class' => 'form-control']) !!}
+            </div>
         </div>
 
         <div class="form-group">
-            {!! Form::label('password', __('system.password')) !!}
-            {!! Form::password('password',['class' => 'form-control']) !!}
+            {!! Form::label('password', __('system.password'),['class'=>'col-xs-2 control-label']) !!}
+            <div class="col-xs-8">
+                {!! Form::password('password',['class' => 'form-control']) !!}
+            </div>
         </div>
 
         <div class="form-group">
-            {!! Form::label('password_confirm', __('system.password_confirm')) !!}
-            {!! Form::password('password_confirm',['class' => 'form-control']) !!}
+            {!! Form::label('password_confirm', __('system.password_confirm'),['class'=>'col-xs-2 control-label']) !!}
+            <div class="col-xs-8">
+                {!! Form::password('password_confirm',['class' => 'form-control']) !!}
+            </div>
         </div>
         @if($groups)
             <div class="form-group">
-                {!! Form::label('groups', __('system.groups')) !!} <br>
-                @foreach($groups as $group)
-                    {!! Form::label('group'.$group->id, $group->name) !!}
-                    {!! Form::checkbox('groups[]', $group->id, $user->hasRole($group->name),['id'=>'group'.$group->id]); !!}
-                    <br>
-                @endforeach
+                {!! Form::label('groups', __('system.groups'),['class'=>'col-xs-2 control-label']) !!}
+                <div class="col-xs-8">
+                    @foreach($groups as $group)
+
+                        {!! Form::checkbox('groups[]', $group->id, $user->hasRole($group->name),['id'=>'group'.$group->id]); !!}
+                        {!! Form::label('group'.$group->id, $group->name) !!}
+                        <br>
+                    @endforeach
+                </div>
             </div>
         @endif
         {!! Form::hidden('task','',['id'=>'task']) !!}

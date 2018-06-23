@@ -45,11 +45,14 @@
                         <td>{{ $user->created_at }}</td>
                         <td>{{ $user->updated_at }}</td>
                         <td>
-                            <form action="{{ route('admin.users.destroy',['user'=>$user->id]) }}" method="post">
-                                {{csrf_field()}}
-                                {{ method_field('DELETE') }}
-                                <button type="submit" class="btn btn-xs btn-danger">{{ __('system.delete') }}</button>
-                            </form>
+                            {!! Form::open([
+                                'url'=>route('admin.users.destroy',['user'=>$user->id]),
+                                'class'=>'form-horizontal',
+                                'method'=>'DELETE'
+                            ]) !!}
+                            {!! Form::button(__('system.delete'),['class'=>'btn btn-xs btn-danger','type'=>'submit']) !!}
+
+                            {!! Form::close() !!}
                         </td>
 
                     </tr>

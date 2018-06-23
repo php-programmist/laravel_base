@@ -12,14 +12,13 @@
 	*/
 	
 	
-	Route::group([ 'middleware' => [ 'web' ], ], function () {
-		/** @noinspection PhpUndefinedMethodInspection */
-		Auth::routes();
-		Route::get('/', 'ArticleController@index')->name('home');
-		Route::get('articles/{slug}', 'ArticleController@show')->name('articles');
-	});
+	/** @noinspection PhpUndefinedMethodInspection */
+	Auth::routes();
+	Route::get('/', 'ArticleController@index')->name('home');
+	Route::get('articles/{slug}', 'ArticleController@show')->name('articles');
 	
-	Route::group([ 'middleware' => [ 'web', 'auth' ], 'prefix' => 'admin', 'as' => 'admin.' ], function () {
+	
+	Route::group([ 'middleware' => [ 'auth' ], 'prefix' => 'admin', 'as' => 'admin.' ], function () {
 		Route::get('/', function () {
 			return redirect()->route('admin.users.index');
 		});
