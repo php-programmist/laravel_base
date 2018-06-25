@@ -16,7 +16,7 @@
 	Auth::routes();
 	Route::get('/', 'ArticleController@index')->name('home');
 	Route::get('articles/{slug}', 'ArticleController@show')->name('articles');
-	
+	Route::get('articles/cat/{cat_slug}', [ 'uses' => 'ArticleController@index', 'as' => 'articlesCat' ]);
 	
 	Route::group([ 'middleware' => [ 'auth' ], 'prefix' => 'admin', 'as' => 'admin.' ], function () {
 		Route::get('/', function () {

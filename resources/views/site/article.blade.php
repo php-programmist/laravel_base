@@ -30,6 +30,9 @@
                     {{ date("d.m.Y H:i",strtotime($article->created_at)) }}
                 </time>
                 <div class="author">{{ __('article.author') }}: {{ $article->user->name }}</div>
+                <div class="category">{{ __('system.category') }}: <a
+                            href="{{ route('articlesCat',$article->category->id.'-'.$article->category->alias) }}">{{ $article->category->title }}</a>
+                </div>
                 <a href="{{ url()->previous() }}">
                     <button class="btn btn-primary">&larr; {{ __('article.back') }} </button>
                 </a>

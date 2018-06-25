@@ -19,6 +19,7 @@
 
 <!-- Custom styles for this template -->
     <link href="{{ asset('css/blog-home.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/site.css') }}" rel="stylesheet">
 
 </head>
 
@@ -68,35 +69,27 @@
 
             <!-- Categories Widget -->
             <div class="card my-4">
-                <h5 class="card-header">Categories</h5>
+                <h5 class="card-header">{{ __('system.categories_list') }}</h5>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-lg-6">
-                            <ul class="list-unstyled mb-0">
-                                <li>
-                                    <a href="#">Web Design</a>
-                                </li>
-                                <li>
-                                    <a href="#">HTML</a>
-                                </li>
-                                <li>
-                                    <a href="#">Freebies</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-lg-6">
-                            <ul class="list-unstyled mb-0">
-                                <li>
-                                    <a href="#">JavaScript</a>
-                                </li>
-                                <li>
-                                    <a href="#">CSS</a>
-                                </li>
-                                <li>
-                                    <a href="#">Tutorials</a>
-                                </li>
-                            </ul>
-                        </div>
+                        @if($categories)
+                            <div class="col-lg-6">
+                                <ul class="list-unstyled mb-0">
+                                    @foreach($categories as $k => $category)
+                                        <li>
+                                            <a href="{{ route('articlesCat',$category->id.'-'.$category->alias) }}">{{ $category->title }}</a>
+                                        </li>
+                                        @if(round(count($categories)/2)==$k+1)
+                                </ul>
+                            </div>
+                            <div class="col-lg-6">
+                                <ul class="list-unstyled mb-0">
+                                    @endif
+                                    @endforeach
+                                </ul>
+                            </div>
+
+                        @endif
                     </div>
                 </div>
             </div>

@@ -3,7 +3,6 @@
 	namespace App;
 	
 	use Illuminate\Database\Eloquent\Model;
-	use Illuminate\Support\Str;
 	use Intervention\Image\Facades\Image;
 	
 	class Article extends Model {
@@ -25,7 +24,7 @@
 		
 		public function prepare($request) {
 			if ( empty($this->alias) AND !empty($this->name) ) {
-				$this->alias = Str::slug($this->name);
+				$this->alias = str_slug($this->name);
 			}
 			if ( empty($this->state) ) {
 				$this->state = 0;

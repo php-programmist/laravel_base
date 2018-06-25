@@ -9,15 +9,38 @@
 	class ArticleController extends SiteController {
 		
 		
-		public function index(Request $request) {
+		public function index(Request $request, $cat_slug = false) {
 			$this->template      = 'site.articles';
 			$this->vars['title'] = "Статьи";
 			$page                = $request->has('page') ? $request->query('page') : 1;
 			
+			$where['state'] = 1;
+			$cat_id         = $cat_slug ? (int) explode('-', $cat_slug)[0] : 0;
 			
-			$this->vars['articles'] = \Cache::remember('articles_' . $page, config('settings.cache_articles', 0), function () {
-				$articles = Article::orderByDesc('id')->where([ 'state' => 1 ])->paginate(config('settings.site_pagination', 5));
+			if ( $cat_id ) {
+				$category = \App\Category::find($cat_id);
+				$children = $category->children;
+				if ( count($children) ) {
+					$ids   = $children->pluck('id')->all();
+					$ids[] = $cat_id;
+				}
+				else {
+					$ids[] = $cat_id;
+				}
+				
+				$this->vars['title'] = $category->title;
+			}
+			
+			$this->vars['articles'] = \Cache::remember('articles_page_' . $page . '_cat_' . $cat_id, config('settings.cache_articles', 0), function () use ($ids, $where) {
+				$query = Article::orderByDesc('id')->where($where);
+				if ( $ids ) {
+					$query->whereIn('category_id', $ids);
+				}
+				
+				$articles = $query->paginate(config('settings.site_pagination', 5));
+				
 				$articles->load('user');
+				$articles->load('category');
 				
 				return $articles;
 			});

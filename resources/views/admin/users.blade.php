@@ -44,7 +44,7 @@
                     @endforeach
                 </table>
             </div>
-            <div class="center">{{ $users->links() }}</div>
+            {{ $users->links() }}
         @endif
 
 

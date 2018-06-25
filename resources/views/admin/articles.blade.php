@@ -50,7 +50,7 @@
                     @endforeach
                 </table>
             </div>
-            <div class="center">{{ $articles->links() }}</div>
+            {{ $articles->links() }}
         @endif
 
 

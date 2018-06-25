@@ -3,7 +3,7 @@
 	namespace App;
 	
 	use Illuminate\Database\Eloquent\Model;
-	use Illuminate\Support\Str;
+	
 	
 	class Category extends Model {
 		protected $fillable = [
@@ -20,7 +20,7 @@
 		
 		public function prepare($request) {
 			if ( empty($this->alias) AND !empty($this->title) ) {
-				$this->alias = Str::slug($this->title);
+				$this->alias = str_slug($this->title);
 			}
 			if ( empty($this->state) ) {
 				$this->state = 0;

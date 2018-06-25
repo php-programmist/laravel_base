@@ -1,9 +1,6 @@
 @extends('site.layouts.blog')
-
-
-
 @section('content')
-    <h1 class="my-4">Статьи</h1>
+    <h1 class="my-4">{{ $title }}</h1>
 
     @if ($articles)
 
@@ -44,6 +41,9 @@
                         {{ date("d.m.Y H:i",strtotime($article->created_at)) }}
                     </time>
                     <div class="author">{{ __('article.author') }}: {{ $article->user->name }}</div>
+                    <div class="category">{{ __('system.category') }}: <a
+                                href="{{ route('articlesCat',$article->category->id.'-'.$article->category->alias) }}">{{ $article->category->title }}</a>
+                    </div>
                 </footer>
 
             </article>

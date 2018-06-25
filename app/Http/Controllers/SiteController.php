@@ -28,7 +28,7 @@
 				}
 			});
 			
-			
+			$this->vars = array_add($this->vars, 'categories', $this->getCategories());
 			$this->vars = array_add($this->vars, 'navigation', $navigation);
 			
 			return view($this->template)->with($this->vars);
@@ -36,25 +36,36 @@
 		
 		protected function getMenu() {
 			
-			$menu     = \App\Menu::all();
+			$menu     = \App\Menu::where('parent_id', 0)->orderBy('ordering')->get();
 			$mBuilder = \Menu::make('main_menu', function ($m) use ($menu) {
 				
 				foreach ($menu as $item) {
 					
 					$item->path = ltrim($item->path, '\/');
 					
-					if ( $item->parent_id == 0 ) {
-						$m->add($item->title, $item->path)->id($item->id);
-					}
-					else {
-						if ( $m->find($item->parent_id) ) {
-							$m->find($item->parent_id)->add($item->title, $item->path)->id($item->id);
+					$m->add($item->title, $item->path)->id($item->id);
+					foreach ($item->children()->orderBy('ordering')->get() as $child) {
+						$child->path = ltrim($child->path, '\/');
+						$m->find($item->id)->add($child->title, $child->path)->id($child->id);
+						
+						foreach ($child->children()->orderBy('ordering')->get() as $sub_child) {
+							$sub_child->path = ltrim($sub_child->path, '\/');
+							$m->find($child->id)->add($sub_child->title, $sub_child->path)->id($sub_child->id);
 						}
 					}
+					
 				}
 				
 			});
 			
+			
 			return $mBuilder;
+		}
+		
+		protected function getCategories() {
+			return \App\Category::where([
+				[ 'id', '!=', 1 ],
+				[ 'state', 1 ],
+			])->orderBy('id')->get();
 		}
 	}
