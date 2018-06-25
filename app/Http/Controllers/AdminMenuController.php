@@ -2,10 +2,10 @@
 	
 	namespace App\Http\Controllers;
 	
-	use App\Comment;
+	use App\Menu;
 	use Illuminate\Http\Request;
 	
-	class CommentController extends Controller {
+	class AdminMenuController extends Controller {
 		/**
 		 * Display a listing of the resource.
 		 *
@@ -38,22 +38,22 @@
 		/**
 		 * Display the specified resource.
 		 *
-		 * @param  \App\Comment $comment
+		 * @param  \App\Menu $menu
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function show(Comment $comment) {
+		public function show(Menu $menu) {
 			//
 		}
 		
 		/**
 		 * Show the form for editing the specified resource.
 		 *
-		 * @param  \App\Comment $comment
+		 * @param  \App\Menu $menu
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function edit(Comment $comment) {
+		public function edit(Menu $menu) {
 			//
 		}
 		
@@ -61,22 +61,22 @@
 		 * Update the specified resource in storage.
 		 *
 		 * @param  \Illuminate\Http\Request $request
-		 * @param  \App\Comment             $comment
+		 * @param  \App\Menu                $menu
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function update(Request $request, Comment $comment) {
+		public function update(Request $request, Menu $menu) {
 			//
 		}
 		
 		/**
 		 * Remove the specified resource from storage.
 		 *
-		 * @param  \App\Comment $comment
+		 * @param  \App\Menu $menu
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function destroy(Comment $comment) {
+		public function destroy(Menu $menu) {
 			//
 		}
 	}

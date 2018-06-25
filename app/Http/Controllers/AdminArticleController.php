@@ -17,6 +17,7 @@
 		public function index() {
 			$articles = Article::orderBy('id')->paginate(config('settings.admin_pagination', 15));
 			$articles->load('user');
+			$articles->load('category');
 			$title = __('system.articles_list');
 			
 			return view('admin.articles', [
@@ -35,10 +36,12 @@
 				return redirect()->back()->with([ 'message' => __('article.not_allowed_update') ])->withInput();
 			}
 			
+			$categories = $this->getCategories();
 			
 			return view('admin.article', [
-				'title'   => __('article.article_edit'),
-				'article' => $article,
+				'title'      => __('article.article_edit'),
+				'article'    => $article,
+				'categories' => $categories,
 			
 			]);
 		}
@@ -52,10 +55,12 @@
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ])->withInput();
 			}
 			
+			$categories = $this->getCategories();
 			
 			return view('admin.article', [
-				'title'   => __('article.article_add'),
-				'article' => $article,
+				'title'      => __('article.article_add'),
+				'article'    => $article,
+				'categories' => $categories,
 			]);
 		}
 		
@@ -77,13 +82,8 @@
 			$article->fill($data);
 			$article->prepare($request);
 			$user->articles()->save($article);
-			if ( $data['task'] == 'apply' ) {
-				return redirect()->back()->with('message', __('article.article_updated'));
-			}
-			else {
-				return redirect()->route('admin.articles.index')->with([ 'message' => __('article.article_updated') ]);
-			}
 			
+			return task_route($data['task'], 'admin.articles', __('article.article_updated'), $article->id);
 			
 		}
 		
@@ -106,14 +106,8 @@
 			$user = Auth::user();
 			$user->articles()->save($article);
 			
-			$article_id = $article->id;
 			
-			if ( $data['task'] == 'apply' ) {
-				return redirect()->route('admin.articles.edit', [ 'id' => $article_id ])->with([ 'message' => __('article.article_created') ]);
-			}
-			else {
-				return redirect()->route('admin.articles.index')->with([ 'message' => __('article.article_created') ]);
-			}
+			return task_route($data['task'], 'admin.articles', __('article.article_created'), $article->id);
 			
 		}
 		
@@ -139,5 +133,29 @@
 			}
 			
 			return redirect()->back()->with([ 'message' => __('article.article_deleted') ]);
+		}
+		
+		private function getCategories() {
+			$parent_categories = \App\Category::orderBy('id')->where('parent_id', 0)->get();
+			$parent_categories->load('articles');
+			$parent_categories->load('children');
+			
+			
+			$categories = [];
+			foreach ($parent_categories as &$category) {
+				$category->children_num = $category->children->count();
+				$categories[]           = $category;
+				if ( $category->children_num ) {
+					foreach ($category->children as $child) {
+						$child->children_num = 0;
+						$child->title        = '|-' . $child->title;
+						$categories[]        = $child;
+					}
+				}
+			}
+			
+			$categories = collect($categories);
+			
+			return $categories->pluck('title', 'id')->all();
 		}
 	}

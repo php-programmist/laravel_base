@@ -12,8 +12,12 @@
 
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    {{--<link href="{{ asset('bootstrap/css/bootstrap-4-navbar.css') }}" rel="stylesheet">--}}
+    <link href="{{ asset('bootstrap/css/bootstrap-4-hover-navbar.css') }}" rel="stylesheet">
+{{--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+      integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">--}}
 
-    <!-- Custom styles for this template -->
+<!-- Custom styles for this template -->
     <link href="{{ asset('css/blog-home.css') }}" rel="stylesheet">
 
 </head>
@@ -21,33 +25,10 @@
 <body>
 
 <!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="{{ url('/') }}">{{ config('app.name', 'Laravel') }}</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{ url('/') }}">Home
-                        <span class="sr-only">(current)</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Services</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+@section('navigation')
+    {!! $navigation !!}
+@endsection
+@yield('navigation')
 
 <!-- Page Content -->
 <div class="container">
@@ -56,6 +37,14 @@
 
         <!-- Blog Entries Column -->
         <div class="col-md-8">
+            @if(Session::has('error'))
+                <p class="alert alert-danger">{{ Session::get('error') }}</p>
+            @endif
+
+            @if (Session::has('message'))
+                <div class="alert alert-info">{{ Session::get('message') }}</div>
+            @endif
+
             @yield('content')
 
 
@@ -140,6 +129,7 @@
 <!-- Bootstrap core JavaScript -->
 <script src="{{ asset('jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('bootstrap/js/bootstrap-4-navbar.js') }}"></script>
 
 </body>
 

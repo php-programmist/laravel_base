@@ -26,5 +26,9 @@
 		
 		Route::resource('/articles', 'AdminArticleController');
 		Route::resource('/users', 'AdminUserController');
+		Route::resource('/menus', 'AdminMenuController');
+		Route::resource('/categories', 'AdminCategoryController');
+		Route::resource('/comments', 'AdminCommentController');
+		Route::resource('/users/groups', 'AdminGroupController');
 	});
 	

@@ -61,19 +61,14 @@
 			
 			$user->save();
 			
-			$user_id = $user->id;
 			
 			$new_groups = $request->get('groups', []);
 			if ( $new_groups ) {
 				$user->groups()->attach($new_groups);
 			}
 			
-			if ( $data['task'] == 'apply' ) {
-				return redirect()->route('admin.users.edit', [ 'id' => $user_id ])->with([ 'message' => __('system.user_created') ]);
-			}
-			else {
-				return redirect()->route('admin.users.index')->with([ 'message' => __('system.user_created') ]);
-			}
+			return task_route($data['task'], 'admin.users', __('system.user_created'), $user->id);
+			
 		}
 		
 		/**
@@ -150,14 +145,7 @@
 				$user->groups()->detach($detach_ids);
 			}
 			
-			$user_id = $user->id;
-			
-			if ( $data['task'] == 'apply' ) {
-				return redirect()->route('admin.users.edit', [ 'id' => $user_id ])->with([ 'message' => __('system.user_updated') ]);
-			}
-			else {
-				return redirect()->route('admin.users.index')->with([ 'message' => __('system.user_updated') ]);
-			}
+			return task_route($data['task'], 'admin.users', __('system.user_updated'), $user->id);
 		}
 		
 		/**

@@ -1,7 +1,10 @@
 <?php
 	return [
-		'admin_pagination' => 15,
-		'site_pagination'  => 5,
-		'max_image_width'  => 750,
-		'max_image_height' => 300,
+		'admin_pagination'  => 15,//Количество элементов на сранице в админке
+		'site_pagination'   => 5,//Количество элементов на сранице на сайте
+		'max_image_width'   => 750,//Максимальная ширина изображений блога
+		'max_image_height'  => 300,//Максимальная высота изображений блога
+		'cache_articles'    => 0,//Кэширование статей в минутах. 0 - кэширование отключено
+		'cache_menus'       => 0,//Кэширование меню в минутах. 0 - кэширование отключено
+		'user_registration' => false,//Разрешить регистрацию? Bool
 	];

@@ -1,4 +1,6 @@
-@extends('layouts.blog')
+@extends('site.layouts.blog')
+
+
 
 @section('content')
     <h1 class="my-4">Статьи</h1>

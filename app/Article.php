@@ -8,11 +8,15 @@
 	
 	class Article extends Model {
 		protected $fillable = [
-			'name', 'alias', 'image', 'intro_text', 'full_text', 'state', 'user_id',
+			'name', 'alias', 'image', 'intro_text', 'full_text', 'state', 'user_id', 'category_id',
 		];
 		
 		public function user() {
 			return $this->belongsTo('App\User');
+		}
+		
+		public function category() {
+			return $this->belongsTo('App\Category');
 		}
 		
 		public function comments() {
@@ -26,7 +30,9 @@
 			if ( empty($this->state) ) {
 				$this->state = 0;
 			}
-			
+			if ( empty($this->category_id) ) {
+				$this->category_id = 1;
+			}
 			if ( $request->hasFile('image') ) {
 				$file = $request->file('image');
 				if ( strstr($file->getClientMimeType(), 'image/') ) {

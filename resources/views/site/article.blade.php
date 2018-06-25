@@ -1,4 +1,4 @@
-@extends('layouts.blog')
+@extends('site.layouts.blog')
 
 @section('content')
     @if ($article)

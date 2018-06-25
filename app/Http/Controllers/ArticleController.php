@@ -4,31 +4,39 @@
 	
 	use Illuminate\Http\Request;
 	use App\Article;
-	use Cache;
 	
-	class ArticleController extends Controller {
+	
+	class ArticleController extends SiteController {
+		
+		
 		public function index(Request $request) {
-			$page = $request->has('page') ? $request->query('page') : 1;
+			$this->template      = 'site.articles';
+			$this->vars['title'] = "Статьи";
+			$page                = $request->has('page') ? $request->query('page') : 1;
 			
-			$articles = Cache::remember('articles_' . $page, 10, function () {
+			
+			$this->vars['articles'] = \Cache::remember('articles_' . $page, config('settings.cache_articles', 0), function () {
 				$articles = Article::orderByDesc('id')->where([ 'state' => 1 ])->paginate(config('settings.site_pagination', 5));
 				$articles->load('user');
 				
 				return $articles;
 			});
 			
-			$title = "Статьи";
 			
-			return view('articles', [ 'title' => $title, 'articles' => $articles ]);
+			return $this->renderOutput();
 		}
 		
 		public function show($slug) {
-			$id      = (int) explode('-', $slug)[0];
-			$article = Cache::remember('article_' . $id, 10, function () use ($id) {
+			$id = (int) explode('-', $slug)[0];
+			
+			$this->vars['article'] = \Cache::remember('article_' . $id, config('settings.cache_articles', 0), function () use ($id) {
 				return Article::where([ 'state' => '1', 'id' => $id ])->firstOrFail();
 			});
-			$title   = $article->name;
 			
-			return view('article', [ 'title' => $title, 'article' => $article ]);
+			$this->template = 'site.article';
+			
+			$this->vars['title'] = $this->vars['article']->name;
+			
+			return $this->renderOutput();
 		}
 	}
