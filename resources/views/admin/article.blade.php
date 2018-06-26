@@ -8,9 +8,9 @@
 
 @section('content')
     @if($article->id)
-        @if($article->image AND file_exists(public_path('images').DIRECTORY_SEPARATOR.$article->image))
+        @if($article->image AND file_exists(public_path('images/articles').DIRECTORY_SEPARATOR.$article->image))
             <div class="card mb-4">
-                {{ Html::image('images/'.$article->image,$article->name ) }}
+                {{ Html::image('images/articles/'.$article->image,$article->name ) }}
             </div>
         @endif
         <div class="card-body">

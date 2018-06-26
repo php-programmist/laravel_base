@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ $title }}</title>
 
@@ -19,6 +20,7 @@
 
 <!-- Custom styles for this template -->
     <link href="{{ asset('css/blog-home.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/comments.css') }}" rel="stylesheet">
     <link href="{{ asset('css/site.css') }}" rel="stylesheet">
 
 </head>
@@ -121,6 +123,7 @@
 
 <!-- Bootstrap core JavaScript -->
 <script src="{{ asset('jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('js/myscripts.js') }}"></script>
 <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('bootstrap/js/bootstrap-4-navbar.js') }}"></script>
 

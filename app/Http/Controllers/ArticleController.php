@@ -16,7 +16,7 @@
 			
 			$where['state'] = 1;
 			$cat_id         = $cat_slug ? (int) explode('-', $cat_slug)[0] : 0;
-			
+			$ids            = [];
 			if ( $cat_id ) {
 				$category = \App\Category::find($cat_id);
 				$children = $category->children;
@@ -41,6 +41,7 @@
 				
 				$articles->load('user');
 				$articles->load('category');
+				$articles->load('comments');
 				
 				return $articles;
 			});
@@ -52,11 +53,18 @@
 		public function show($slug) {
 			$id = (int) explode('-', $slug)[0];
 			
-			$this->vars['article'] = \Cache::remember('article_' . $id, config('settings.cache_articles', 0), function () use ($id) {
+			$article = \Cache::remember('article_' . $id, config('settings.cache_articles', 0), function () use ($id) {
 				return Article::where([ 'state' => '1', 'id' => $id ])->firstOrFail();
 			});
+			$article->load('comments');
 			
-			$this->template = 'site.article';
+			$article->comments = $article->comments->reject(function ($comment) {
+				return $comment->state == 0;
+			});
+			
+			$this->vars['comments_groups'] = $article->comments->groupBy('parent_id');
+			$this->vars['article']         = $article;
+			$this->template                = 'site.article';
 			
 			$this->vars['title'] = $this->vars['article']->name;
 			

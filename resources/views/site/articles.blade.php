@@ -10,7 +10,7 @@
             <!-- Blog Post -->
             <article class="card mb-4">
                 @if($article->image)
-                    {{ Html::image('images/'.$article->image,$article->name,['class'=> 'card-img-top'] ) }}
+                    {{ Html::image('images/articles/'.$article->image,$article->name,['class'=> 'card-img-top'] ) }}
                 @endif
                 <div class="card-body">
                     <header>

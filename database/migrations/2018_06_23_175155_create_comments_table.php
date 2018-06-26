@@ -15,8 +15,8 @@
 				$table->increments('id');
 				
 				$table->text('text');
-				$table->string('name');
-				$table->string('email');
+				$table->string('name')->nullable();
+				$table->string('email')->nullable();
 				$table->integer('state')->default('0');
 				$table->integer('parent_id')->default('0');
 				$table->integer('user_id')->unsigned()->nullable();

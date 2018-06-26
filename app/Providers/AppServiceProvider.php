@@ -18,6 +18,8 @@ class AppServiceProvider extends ServiceProvider
 	    \Form::component('bsTextarea', 'components.form.textarea', [ 'name', 'value', 'label', 'attributes' ]);
 	    \Form::component('bsFile', 'components.form.file', [ 'name', 'label', 'attributes' ]);
 	    \Form::component('bsSelect', 'components.form.select', [ 'name', 'options', 'selected', 'label', 'attributes' ]);
+	
+	
     }
 
     /**
