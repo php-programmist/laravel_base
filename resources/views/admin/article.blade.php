@@ -36,52 +36,14 @@
                     'files'=>true,
                 ]) !!}
             @endif
-            <div class="form-group row">
-                {!! Form::label('name', __('system.title'),['class'=>'col-sm-2 col-form-label']) !!}
-                <div class="col-sm-10">
-                    {!! Form::text('name',NULL,['class' => 'form-control']) !!}
-                </div>
-            </div>
 
-            <div class="form-group row">
-                {!! Form::label('alias', __('system.alias'),['class'=>'col-sm-2 col-form-label']) !!}
-                <div class="col-sm-10">
-                    {!! Form::text('alias',NULL,['class' => 'form-control']) !!}
-                </div>
-            </div>
-            <div class="form-group row">
-                {!! Form::label('category_id', __('system.parent_category'),['class'=>'col-sm-2 col-form-label']) !!}
-                <div class="col-sm-10">
-                    {!! Form::select('category_id', $categories) !!}
-                </div>
-            </div>
-            <div class="form-group row">
-                {!! Form::label('image', __('system.image'),['class'=>'col-sm-2 col-form-label']) !!}
-                <div class="col-sm-10">
-                    {!! Form::file('image',['class' => 'filestyle']) !!}
-                </div>
-            </div>
-
-            <div class="form-group row">
-                {!! Form::label('intro_text', __('article.short_desc'),['class'=>'col-sm-2 col-form-label']) !!}
-                <div class="col-sm-10">
-                    {!! Form::textarea('intro_text',NULL,['class' => 'form-control']) !!}
-                </div>
-            </div>
-
-            <div class="form-group row">
-                {!! Form::label('full_text', __('article.full_desc'),['class'=>'col-sm-2 col-form-label']) !!}
-                <div class="col-sm-10">
-                    {!! Form::textarea('full_text',NULL,['class' => 'form-control','id'=>'editor']) !!}
-                </div>
-            </div>
-
-            <div class="form-group row">
-                {!! Form::label('state', __('system.state'),['class'=>'col-sm-2 col-form-label']) !!}
-                <div class="col-sm-10">
-                    {!! Form::select('state', ['1' => __('system.published'), '0' => __('system.unpublished')]) !!}
-                </div>
-            </div>
+            {{ Form::bsText('name',NULL,__('system.title')) }}
+            {{ Form::bsText('alias') }}
+            {{ Form::bsSelect('category_id',$categories,NULL,__('system.parent_category')) }}
+            {{ Form::bsFile('image',__('system.image'),['class' => 'filestyle']) }}
+            {{ Form::bsTextarea('intro_text',NULL,__('article.short_desc')) }}
+            {{ Form::bsTextarea('full_text',NULL,__('article.full_desc'),['id'=>'editor']) }}
+            {{ Form::bsSelect('state',['1' => __('system.published'), '0' => __('system.unpublished')]) }}
             {!! Form::hidden('task','',['id'=>'task']) !!}
             {!! Form::close() !!}
         </div>

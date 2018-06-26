@@ -26,26 +26,9 @@
             'method'=>'post',
         ]) !!}
     @endif
-    <div class="form-group row">
-        {!! Form::label('name', __('system.name'),['class'=>'col-sm-2 col-form-label']) !!}
-        <div class="col-sm-10">
-            {!! Form::text('name',NULL,['class' => 'form-control']) !!}
-        </div>
-    </div>
-
-    <div class="form-group row">
-        {!! Form::label('username', __('system.username'),['class'=>'col-sm-2 col-form-label']) !!}
-        <div class="col-sm-10">
-            {!! Form::text('username',NULL,['class' => 'form-control']) !!}
-        </div>
-    </div>
-
-    <div class="form-group row">
-        {!! Form::label('email', __('system.email'),['class'=>'col-sm-2 col-form-label']) !!}
-        <div class="col-sm-10">
-            {!! Form::text('email',NULL,['class' => 'form-control']) !!}
-        </div>
-    </div>
+    {{ Form::bsText('name') }}
+    {{ Form::bsText('username') }}
+    {{ Form::bsEmail('email') }}
 
     <div class="form-group row">
         {!! Form::label('password', __('system.password'),['class'=>'col-sm-2 col-form-label']) !!}

@@ -26,34 +26,12 @@
             'method'=>'post',
         ]) !!}
     @endif
-    <div class="form-group row">
-        {!! Form::label('title', __('system.title'),['class'=>'col-sm-2 col-form-label']) !!}
-        <div class="col-sm-10">
-            {!! Form::text('title',NULL,['class' => 'form-control']) !!}
-        </div>
-    </div>
-
-    <div class="form-group row">
-        {!! Form::label('alias', __('system.alias'),['class'=>'col-sm-2 col-form-label']) !!}
-        <div class="col-sm-10">
-            {!! Form::text('alias',NULL,['class' => 'form-control']) !!}
-        </div>
-    </div>
-
-    <div class="form-group row">
-        {!! Form::label('state', __('system.state'),['class'=>'col-sm-2 col-form-label']) !!}
-        <div class="col-sm-10">
-            {!! Form::select('state', ['1' => __('system.published'), '0' => __('system.unpublished')]) !!}
-        </div>
-    </div>
+    {{ Form::bsText('title') }}
+    {{ Form::bsText('alias') }}
+    {{ Form::bsSelect('state',['1' => __('system.published'), '0' => __('system.unpublished')]) }}
 
     @if($categories)
-        <div class="form-group row">
-            {!! Form::label('parent_id', __('system.parent_category'),['class'=>'col-sm-2 col-form-label']) !!}
-            <div class="col-sm-10">
-                {!! Form::select('parent_id', $categories) !!}
-            </div>
-        </div>
+        {{ Form::bsSelect('parent_id',$categories,NULL,__('system.parent_category')) }}
     @endif
     {!! Form::hidden('task','',['id'=>'task']) !!}
     {!! Form::close() !!}

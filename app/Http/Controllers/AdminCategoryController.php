@@ -98,7 +98,7 @@
 			$categories = $this->getParents($category->id);
 			
 			return view('admin.category', [
-				'title'      => __('system.create_category'),
+				'title'      => __('system.edit_category'),
 				'category'   => $category,
 				'categories' => $categories,
 			]);

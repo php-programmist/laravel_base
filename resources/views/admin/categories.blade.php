@@ -35,8 +35,8 @@
                             {{ $category->state?Html::image(asset('icons/tick.png'),__('system.published')) :Html::image(asset('icons/publish_x.png'),__('system.unpublished')) }}
                         </td>
 
-                        <td>{{--<a target="_blank"
-                                   href="{{ route('categories',$category->id.'-'.$category->alias) }}">{{ __('system.preview') }}</a>--}}
+                        <td><a target="_blank"
+                               href="{{ route('articlesCat',$category->id.'-'.$category->alias) }}">{{ __('system.preview') }}</a>
                         </td>
                         <td>
                             {!! Form::open([
