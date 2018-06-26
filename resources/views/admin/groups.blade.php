@@ -1,52 +1,49 @@
 @extends('layouts.admin')
 
 @section('toolbar')
-    <a href="{{ route('admin.articles.create') }}">
+    <a href="{{ route('admin.groups.create') }}">
         <button class="btn btn-success m-2">{{__('system.add')}}</button>
     </a>
 @endsection
 
 @section('content')
 
-    @if ($articles)
+    @if ($groups)
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <tr>
                     <th>Id</th>
                     <th>{{__('system.title')}}</th>
-                    <th>{{__('system.alias')}}</th>
-                    <th>{{__('system.username')}}</th>
-                    <th>{{__('system.state')}}</th>
-                    <th>{{__('system.created_at')}}</th>
-                    <th>{{__('system.link')}}</th>
+
+                    <th>{{__('system.users_num')}}</th>
+
                     <th></th>
                 </tr>
-                @foreach($articles as $article)
+                @foreach($groups as $group)
                     <tr>
-                        <td>{{ $article->id }}</td>
-                        <td><a href="{{ route('admin.articles.edit',$article->id) }}">{{ $article->name }}</a></td>
-                        <td>{{ $article->alias }}</td>
-                        <td>{{ $article->user->username }}</td>
-                        <td>{{ $article->state?__('system.published'):__('system.unpublished') }}</td>
-                        <td>{{ $article->created_at->format('d.m.Y H:i') }}</td>
-                        <td><a target="_blank"
-                               href="{{ route('articles',$article->id.'-'.$article->alias) }}">{{ __('system.preview') }}</a>
+                        <td>{{ $group->id }}</td>
+                        <td class="left"><a
+                                    href="{{ route('admin.groups.edit',$group->id) }}">{{ $group->name }}</a>
                         </td>
+
+                        <td>{{ count($group->users) }}</td>
                         <td>
+                            @if($group->name!='Super User')
                             {!! Form::open([
-                                'url'=>route('admin.articles.destroy',['article'=>$article->id]),
+                                'url'=>route('admin.groups.destroy',['group'=>$group->id]),
                                 'class'=>'form-horizontal',
                                 'method'=>'DELETE'
                             ]) !!}
                             {!! Form::button(__('system.delete'),['class'=>'btn btn-xs btn-danger','type'=>'submit']) !!}
 
                             {!! Form::close() !!}
+                            @endif
                         </td>
                     </tr>
                 @endforeach
             </table>
         </div>
-        <div class="center">{{ $articles->links() }}</div>
+        <div class="center">{{ $groups->links() }}</div>
     @endif
 
 
