@@ -20,14 +20,22 @@
     outline: 0;
 }
 
+.btco-hover-menu ul.dropdown-menu .active a,
+.btco-hover-menu ul.dropdown-menu .active a:focus,
+.btco-hover-menu ul.dropdown-menu .active a:hover {
+    color: #0000ff;
+    font-weight: bold;
+    outline: 0;
+}
+
 /*submenu style start from here*/
 
 .dropdown-menu {
-    padding: 0px 0;
+    padding: 0 0;
     margin: 0 0 0;
-    border: 0px solid transition !important;
-    border: 0px solid rgba(0, 0, 0, .15);
-    border-radius: 0px;
+
+    border: 0 solid rgba(0, 0, 0, .15);
+    border-radius: 0;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
 
