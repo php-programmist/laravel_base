@@ -18,17 +18,11 @@
 			$cat_id         = $cat_slug ? (int) explode('-', $cat_slug)[0] : 0;
 			$ids            = [];
 			if ( $cat_id ) {
-				$category = \App\Category::find($cat_id);
-				$children = $category->children;
-				if ( count($children) ) {
-					$ids   = $children->pluck('id')->all();
-					$ids[] = $cat_id;
-				}
-				else {
-					$ids[] = $cat_id;
-				}
+				$this->vars['title'] = \App\Category::find($cat_id)->title;
+				$categories          = AdminCategoryController::getCategoriesTree('', $cat_id);
 				
-				$this->vars['title'] = $category->title;
+				$ids   = $categories->pluck('id')->all();
+				$ids[] = $cat_id;
 			}
 			
 			$this->vars['articles'] = \Cache::remember('articles_page_' . $page . '_cat_' . $cat_id, config('settings.cache_articles', 0), function () use ($ids, $where) {

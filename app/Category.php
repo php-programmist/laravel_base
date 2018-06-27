@@ -19,6 +19,7 @@
 		}
 		
 		public function prepare($request) {
+			
 			if ( empty($this->alias) AND !empty($this->title) ) {
 				$this->alias = str_slug($this->title);
 			}
@@ -29,9 +30,45 @@
 				$this->parent_id = 0;
 			}
 			if ( $this->id > 0 AND $this->parent_id == $this->id ) {
-				$this->parent_id = 0;
+				$original = $this->getOriginal()['parent_id'];
+				if ( $original != $this->id ) {
+					$this->parent_id = $original;
+				}
+				else {
+					$this->parent_id = 0;
+				}
+			}
+			elseif ( $this->id > 0 AND $this->parent_id > 0 ) {
+				
+				if ( !$this->checkParent($this->parent_id) ) {
+					$original = $this->getOriginal()['parent_id'];
+					if ( $original != $this->id AND $this->checkParent($original) ) {
+						$this->parent_id = $original;
+					}
+					else {
+						$this->parent_id = 0;
+					}
+				}
 			}
 			
 			return $this;
+		}
+		
+		private function checkParent($parent_id) {
+			
+			$parent_id = \DB::table('categories')
+				->where('id', $parent_id)
+				->value('parent_id');
+			
+			if ( $parent_id == 0 ) {
+				return true;
+			}
+			elseif ( $parent_id == $this->id ) {
+				
+				return false;
+			}
+			else {
+				return $this->checkParent($parent_id);
+			}
 		}
 	}

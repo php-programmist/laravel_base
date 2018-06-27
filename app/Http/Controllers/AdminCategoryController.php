@@ -12,23 +12,8 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function index() {
-			$parent_categories = Category::orderBy('id')->where('parent_id', 0)->get();
-			$parent_categories->load('articles');
-			$parent_categories->load('children');
-			
+			$categories = self::getCategoriesTree('<span class="categoryLevel">&nbsp;&nbsp;&nbsp;<sup>|_</sup>&nbsp;</span>');
 			$title      = __('system.categories_list');
-			$categories = [];
-			foreach ($parent_categories as &$category) {
-				$category->children_num = $category->children->count();
-				$categories[]           = $category;
-				if ( $category->children_num ) {
-					foreach ($category->children as $child) {
-						$child->children_num = 0;
-						$child->title        = '|-' . $child->title;
-						$categories[]        = $child;
-					}
-				}
-			}
 			
 			return view('admin.categories', [
 				'title'      => $title,
@@ -46,7 +31,7 @@
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
 			}
 			$category   = new Category();
-			$categories = $this->getParents();
+			$categories = self::getCategoriesList();
 			
 			return view('admin.category', [
 				'title'      => __('system.create_category'),
@@ -95,7 +80,7 @@
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
 			}
 			
-			$categories = $this->getParents($category->id);
+			$categories = self::getCategoriesList();
 			
 			return view('admin.category', [
 				'title'      => __('system.edit_category'),
@@ -165,17 +150,48 @@
 			return redirect()->back()->with([ 'message' => trans_choice('system.category_deleted', $children_num + 1, [ 'num' => $children_num + 1 ]) ]);
 		}
 		
-		private function getParents($exclude_id = 0) {
-			$categories    = Category::select([ 'id', 'title' ])
-				->where('parent_id', 0)
-				->where('id', '!=', $exclude_id)
-				->where('id', '!=', 1)
-				->get()
-				->pluck('title', 'id')
-				->all();
-			$categories[0] = __('system.no_parent');
-			ksort($categories);
+		public static function getCategoriesList() {
+			$categories_list[0] = __('system.no_parent');
 			
-			return $categories;
+			$categories = self::getCategoriesTree('- ');
+			foreach ($categories as $category) {
+				$categories_list[$category->id] = $category->level_delimiter . " " . $category->title;
+			}
+			
+			return $categories_list;
+		}
+		
+		public static function getCategoriesTree($level_delimiter = '-', $first_parent_id = 0) {
+			$categories = Category::where('id', '!=', 1)->get();
+			$categories->load('articles');
+			
+			$groupped_cats = $categories->groupBy('parent_id');
+			
+			$new_collection = collect();
+			
+			return self::appendChildrenRecurs($groupped_cats, $first_parent_id, $new_collection, -1, $level_delimiter);
+		}
+		
+		public static function appendChildrenRecurs($groupped_cats, $parent_id, $new_collection, $level, $level_delimiter = '-') {
+			$level++;
+			if ( !isset($groupped_cats[$parent_id]) OR !count($groupped_cats[$parent_id]) ) {
+				return $new_collection;
+			}
+			foreach ($groupped_cats[$parent_id] as $parent) {
+				$parent->level_delimiter = str_repeat($level_delimiter, $level);
+				if ( isset($groupped_cats[$parent->id]) ) {
+					$parent->children_num = count($groupped_cats[$parent->id]);
+				}
+				else {
+					$parent->children_num = 0;
+				}
+				
+				$new_collection->push($parent);
+				if ( isset($groupped_cats[$parent->id]) ) {
+					$new_collection = self::appendChildrenRecurs($groupped_cats, $parent->id, $new_collection, $level, $level_delimiter);
+				}
+			}
+			
+			return $new_collection;
 		}
 	}

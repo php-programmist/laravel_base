@@ -25,8 +25,9 @@
                 @foreach($categories as $category)
                     <tr>
                         <td>{{ $category->id }}</td>
-                        <td class="left"><a
-                                    href="{{ route('admin.categories.edit',$category->id) }}">{{ $category->title }}</a>
+                        <td class="left">
+                            {!! $category->level_delimiter !!}
+                            <a href="{{ route('admin.categories.edit',$category->id) }}">{{ $category->title }}</a>
                         </td>
                         <td>{{ $category->alias }}</td>
                         <td>{{ $category->children_num }}</td>

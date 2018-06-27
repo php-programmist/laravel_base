@@ -36,7 +36,7 @@
 				return redirect()->back()->with([ 'message' => __('article.not_allowed_update') ])->withInput();
 			}
 			
-			$categories = $this->getCategories();
+			$categories = AdminCategoryController::getCategoriesList();
 			
 			return view('admin.article', [
 				'title'      => __('article.article_edit'),
@@ -55,7 +55,7 @@
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ])->withInput();
 			}
 			
-			$categories = $this->getCategories();
+			$categories = AdminCategoryController::getCategoriesList();
 			
 			return view('admin.article', [
 				'title'      => __('article.article_add'),
@@ -135,27 +135,4 @@
 			return redirect()->back()->with([ 'message' => __('article.article_deleted') ]);
 		}
 		
-		private function getCategories() {
-			$parent_categories = \App\Category::orderBy('id')->where('parent_id', 0)->get();
-			$parent_categories->load('articles');
-			$parent_categories->load('children');
-			
-			
-			$categories = [];
-			foreach ($parent_categories as &$category) {
-				$category->children_num = $category->children->count();
-				$categories[]           = $category;
-				if ( $category->children_num ) {
-					foreach ($category->children as $child) {
-						$child->children_num = 0;
-						$child->title        = '|-' . $child->title;
-						$categories[]        = $child;
-					}
-				}
-			}
-			
-			$categories = collect($categories);
-			
-			return $categories->pluck('title', 'id')->all();
-		}
 	}
