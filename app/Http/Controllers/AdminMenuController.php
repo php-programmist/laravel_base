@@ -5,7 +5,7 @@
 	use App\Menu;
 	use Illuminate\Http\Request;
 	
-	class AdminMenuController extends Controller {
+	class AdminMenuController extends AdminController{
 		/**
 		 * Display a listing of the resource.
 		 *

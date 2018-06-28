@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
 use App\Http\Controllers\Controller;
+use App\User;
+use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
 {
@@ -37,6 +37,9 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
+	    if( !config('settings.user_registration') ){
+		    abort(404);
+	    }
         $this->middleware('guest');
     }
 
@@ -64,11 +67,17 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+	    $user               = User::create([
             'name' => $data['name'],
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+	    $default_user_group = config('settings.default_user_group');
+	    if( $default_user_group ){
+		    $user->groups()->attach($default_user_group);
+	    }
+	
+	    return $user;
     }
 }

@@ -14,15 +14,17 @@
 .btco-hover-menu .active a:hover,
 .btco-hover-menu li a:hover,
 .btco-hover-menu li a:focus,
-.navbar > .show > a, .navbar > .show > a:focus, .navbar > .show > a:hover {
+.navbar > .show > a,
+.navbar > .show > a:focus,
+.navbar > .show > a:hover {
     color: #000;
     background: transparent;
     outline: 0;
 }
 
-.btco-hover-menu ul.dropdown-menu .active a,
-.btco-hover-menu ul.dropdown-menu .active a:focus,
-.btco-hover-menu ul.dropdown-menu .active a:hover {
+.btco-hover-menu .dropdown-menu .active a,
+.btco-hover-menu .dropdown-menu .active a:focus,
+.btco-hover-menu .dropdown-menu .active a:hover {
     color: #0000ff;
     font-weight: bold;
     outline: 0;
@@ -52,20 +54,23 @@
 }
 
 /*second level*/
-.btco-hover-menu .collapse ul ul ul > li:hover > a {
+.btco-hover-menu .collapse ul ul ul > li:hover > a,
+.btco-hover-menu .collapse div.dropdown-menu:hover > a {
     background: #fff;
 }
 
 /*third level*/
-.btco-hover-menu .collapse ul ul, .btco-hover-menu .collapse ul ul.dropdown-menu {
+.btco-hover-menu .collapse ul ul, .btco-hover-menu .collapse ul .dropdown-menu {
     background: #f5f5f5;
 }
 
-.btco-hover-menu .collapse ul ul ul, .btco-hover-menu .collapse ul ul ul.dropdown-menu {
+.btco-hover-menu .collapse ul ul ul,
+.btco-hover-menu .collapse ul ul .dropdown-menu {
     background: #f5f5f5
 }
 
-.btco-hover-menu .collapse ul ul ul ul, .btco-hover-menu .collapse ul ul ul ul.dropdown-menu {
+.btco-hover-menu .collapse ul ul ul ul,
+.btco-hover-menu .collapse ul ul ul .dropdown-menu {
     background: #f5f5f5
 }
 
@@ -89,7 +94,8 @@
         position: relative;
     }
 
-    .btco-hover-menu .collapse ul li:hover > ul {
+    .btco-hover-menu .collapse ul li:hover > ul,
+    .btco-hover-menu .collapse ul li:hover > div {
         display: block
     }
 

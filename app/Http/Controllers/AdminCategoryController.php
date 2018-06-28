@@ -5,20 +5,21 @@
 	use App\Category;
 	use Illuminate\Http\Request;
 	
-	class AdminCategoryController extends Controller {
+	class AdminCategoryController extends AdminController{
 		/**
 		 * Display a listing of the resource.
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function index() {
+		public function index(){
 			$categories = self::getCategoriesTree('<span class="categoryLevel">&nbsp;&nbsp;&nbsp;<sup>|_</sup>&nbsp;</span>');
-			$title      = __('system.categories_list');
 			
-			return view('admin.categories', [
-				'title'      => $title,
-				'categories' => $categories,
-			]);
+			$this->vars['categories'] = $categories;
+			$this->title              = __('system.categories_list');
+			$this->template           = 'admin.categories';
+			
+			return $this->renderOutput();
+			
 		}
 		
 		/**
@@ -26,18 +27,18 @@
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function create() {
-			if ( !\Auth::user()->hasRole('Super User') ) {
+		public function create(){
+			if( !\Auth::user()->hasRole('Super User') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
 			}
-			$category   = new Category();
-			$categories = self::getCategoriesList();
 			
-			return view('admin.category', [
-				'title'      => __('system.create_category'),
-				'category'   => $category,
-				'categories' => $categories,
-			]);
+			$this->vars['categories'] = self::getCategoriesList();;
+			$this->vars['category'] = new Category();;
+			$this->title    = __('system.create_category');
+			$this->template = 'admin.category';
+			
+			return $this->renderOutput();
+			
 		}
 		
 		/**
@@ -47,13 +48,13 @@
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function store(Request $request) {
-			if ( !\Auth::user()->hasRole('Super User') ) {
+		public function store(Request $request){
+			if( !\Auth::user()->hasRole('Super User') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
 			}
 			$request->validate([
-				'title' => 'required|max:255',
-			]);
+				                   'title' => 'required|max:255',
+			                   ]);
 			
 			$category = new Category();
 			$data     = $request->except('_token');
@@ -67,7 +68,6 @@
 			
 		}
 		
-		
 		/**
 		 * Show the form for editing the specified resource.
 		 *
@@ -75,18 +75,18 @@
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function edit(Category $category) {
-			if ( !\Auth::user()->hasRole('Super User') ) {
+		public function edit(Category $category){
+			if( !\Auth::user()->hasRole('Super User') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
 			}
 			
-			$categories = self::getCategoriesList();
+			$this->vars['categories'] = self::getCategoriesList();;
+			$this->vars['category'] = $category;
+			$this->title            = __('system.edit_category');
+			$this->template         = 'admin.category';
 			
-			return view('admin.category', [
-				'title'      => __('system.edit_category'),
-				'category'   => $category,
-				'categories' => $categories,
-			]);
+			return $this->renderOutput();
+			
 		}
 		
 		/**
@@ -97,13 +97,13 @@
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function update(Request $request, Category $category) {
-			if ( !\Auth::user()->hasRole('Super User') ) {
+		public function update(Request $request, Category $category){
+			if( !\Auth::user()->hasRole('Super User') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
 			}
 			$request->validate([
-				'title' => 'required|max:255',
-			]);
+				                   'title' => 'required|max:255',
+			                   ]);
 			
 			$data = $request->except('_token');
 			
@@ -123,45 +123,45 @@
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function destroy(Category $category) {
-			if ( !\Auth::user()->hasRole('Super User') ) {
+		public function destroy(Category $category){
+			if( !\Auth::user()->hasRole('Super User') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete') ]);
 			}
 			
-			if ( $category->id == 1 ) {
+			if( $category->id == 1 ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete') ]);
 			}
 			$children_num = 0;
-			try {
+			try{
 				$children     = Category::where('parent_id', $category->id)->get();
 				$children_num = count($children);
-				if ( $children_num ) {
-					foreach ($children as $child) {
+				if( $children_num ){
+					foreach( $children as $child ){
 						$child->delete();
 					}
 				}
 				
 				$category->delete();
 			}
-			catch (\Exception $e) {
+			catch( \Exception $e ){
 				\Session::flash('error', $e->getMessage());
 			}
 			
 			return redirect()->back()->with([ 'message' => trans_choice('system.category_deleted', $children_num + 1, [ 'num' => $children_num + 1 ]) ]);
 		}
 		
-		public static function getCategoriesList() {
+		public static function getCategoriesList(){
 			$categories_list[0] = __('system.no_parent');
 			
 			$categories = self::getCategoriesTree('- ');
-			foreach ($categories as $category) {
-				$categories_list[$category->id] = $category->level_delimiter . " " . $category->title;
+			foreach( $categories as $category ){
+				$categories_list[ $category->id ] = $category->level_delimiter . " " . $category->title;
 			}
 			
 			return $categories_list;
 		}
 		
-		public static function getCategoriesTree($level_delimiter = '-', $first_parent_id = 0) {
+		public static function getCategoriesTree($level_delimiter = '-', $first_parent_id = 0){
 			$categories = Category::where('id', '!=', 1)->get();
 			$categories->load('articles');
 			
@@ -172,22 +172,22 @@
 			return self::appendChildrenRecurs($groupped_cats, $first_parent_id, $new_collection, -1, $level_delimiter);
 		}
 		
-		public static function appendChildrenRecurs($groupped_cats, $parent_id, $new_collection, $level, $level_delimiter = '-') {
+		public static function appendChildrenRecurs($groupped_cats, $parent_id, $new_collection, $level, $level_delimiter = '-'){
 			$level++;
-			if ( !isset($groupped_cats[$parent_id]) OR !count($groupped_cats[$parent_id]) ) {
+			if( !isset($groupped_cats[ $parent_id ]) OR !count($groupped_cats[ $parent_id ]) ){
 				return $new_collection;
 			}
-			foreach ($groupped_cats[$parent_id] as $parent) {
+			foreach( $groupped_cats[ $parent_id ] as $parent ){
 				$parent->level_delimiter = str_repeat($level_delimiter, $level);
-				if ( isset($groupped_cats[$parent->id]) ) {
-					$parent->children_num = count($groupped_cats[$parent->id]);
+				if( isset($groupped_cats[ $parent->id ]) ){
+					$parent->children_num = count($groupped_cats[ $parent->id ]);
 				}
-				else {
+				else{
 					$parent->children_num = 0;
 				}
 				
 				$new_collection->push($parent);
-				if ( isset($groupped_cats[$parent->id]) ) {
+				if( isset($groupped_cats[ $parent->id ]) ){
 					$new_collection = self::appendChildrenRecurs($groupped_cats, $parent->id, $new_collection, $level, $level_delimiter);
 				}
 			}

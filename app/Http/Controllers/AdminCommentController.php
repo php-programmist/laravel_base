@@ -5,7 +5,7 @@
 	use App\Comment;
 	use Illuminate\Http\Request;
 	
-	class AdminCommentController extends Controller {
+	class AdminCommentController extends AdminController{
 		/**
 		 * Display a listing of the resource.
 		 *

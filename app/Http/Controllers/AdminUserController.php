@@ -2,25 +2,26 @@
 	
 	namespace App\Http\Controllers;
 	
-	use Illuminate\Http\Request;
-	use App\User;
 	use App\Group;
 	use App\Http\Requests\AdminUserRequest;
+	use App\User;
 	
-	class AdminUserController extends Controller {
+	class AdminUserController extends AdminController{
 		/**
 		 * Display a listing of the resource.
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function index() {
+		public function index(){
 			$users = User::paginate(config('settings.admin_pagination', 15));
 			$users->load('groups');
 			
-			return view('admin.users', [
-				'title' => __('system.users_list'),
-				'users' => $users,
-			]);
+			$this->vars['users'] = $users;
+			$this->title         = __('system.users_list');
+			$this->template      = 'admin.users';
+			
+			return $this->renderOutput();
+			
 		}
 		
 		/**
@@ -28,18 +29,18 @@
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function create() {
-			if ( !\Auth::user()->hasRole('Super User') ) {
+		public function create(){
+			if( !\Auth::user()->hasRole('Super User') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
 			}
-			$user   = new User();
-			$groups = Group::all();
 			
-			return view('admin.user', [
-				'title'  => __('system.create_user'),
-				'user'   => $user,
-				'groups' => $groups,
-			]);
+			$this->vars['user']   = new User();
+			$this->vars['groups'] = Group::all();
+			$this->title          = __('system.create_user');
+			$this->template       = 'admin.user';
+			
+			return $this->renderOutput();
+			
 		}
 		
 		/**
@@ -49,8 +50,8 @@
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function store(AdminUserRequest $request) {
-			if ( !$request->user()->hasRole('Super User') ) {
+		public function store(AdminUserRequest $request){
+			if( !$request->user()->hasRole('Super User') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ])->withInput();
 			}
 			
@@ -61,30 +62,13 @@
 			
 			$user->save();
 			
-			
 			$new_groups = $request->get('groups', []);
-			if ( $new_groups ) {
+			if( $new_groups ){
 				$user->groups()->attach($new_groups);
 			}
 			
 			return task_route($data['task'], 'admin.users', __('system.user_created'), $user->id);
 			
-		}
-		
-		/**
-		 * Display the specified resource.
-		 *
-		 * @param  int $id
-		 *
-		 * @return \Illuminate\Http\Response
-		 */
-		public function show($id) {
-			$user = User::find($id);
-			
-			return view('admin.user', [
-				'title' => __('system.update_user'),
-				'user'  => $user,
-			]);
 		}
 		
 		/**
@@ -94,18 +78,18 @@
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function edit($id) {
-			if ( !\Auth::user()->hasRole('Super User') ) {
+		public function edit($id){
+			if( !\Auth::user()->hasRole('Super User') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
 			}
-			$user   = User::find($id);
-			$groups = Group::all();
 			
-			return view('admin.user', [
-				'title'  => __('system.update_user'),
-				'user'   => $user,
-				'groups' => $groups,
-			]);
+			$this->vars['user']   = User::find($id);
+			$this->vars['groups'] = Group::all();
+			$this->title          = __('system.update_user');
+			$this->template       = 'admin.user';
+			
+			return $this->renderOutput();
+			
 		}
 		
 		/**
@@ -116,16 +100,16 @@
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function update(AdminUserRequest $request, $id) {
-			if ( !$request->user()->hasRole('Super User') ) {
+		public function update(AdminUserRequest $request, $id){
+			if( !$request->user()->hasRole('Super User') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ])->withInput();
 			}
 			$user = User::findOrFail($id);
 			$data = $request->all();
-			if ( $request->filled('password') ) {
+			if( $request->filled('password') ){
 				$data['password'] = \Hash::make($data['password']);
 			}
-			else {
+			else{
 				unset($data['password']);
 			}
 			$user->fill($data);
@@ -137,11 +121,11 @@
 			$detach_ids = array_diff($old_groups, $new_groups);
 			$attach_ids = array_diff($new_groups, $old_groups);
 			
-			if ( count($attach_ids) ) {
+			if( count($attach_ids) ){
 				$user->groups()->attach($attach_ids);
 			}
 			
-			if ( count($detach_ids) ) {
+			if( count($detach_ids) ){
 				$user->groups()->detach($detach_ids);
 			}
 			
@@ -155,13 +139,13 @@
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function destroy($id) {
-			if ( !\Auth::user()->hasRole('Super User') ) {
+		public function destroy($id){
+			if( !\Auth::user()->hasRole('Super User') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete') ]);
 			}
 			
 			$user = User::findOrFail($id);
-			if ( $user->hasRole('Super User') ) {
+			if( $user->hasRole('Super User') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete_SU') ]);
 			}
 			

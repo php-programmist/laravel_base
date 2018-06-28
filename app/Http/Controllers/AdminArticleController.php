@@ -5,25 +5,26 @@
 	//use Illuminate\Http\Request;
 	//use App\User;
 	use App\Article;
-	use Auth;
 	use App\Http\Requests\AdminArticleRequest;
+	use Auth;
 	
 	//use Intervention\Image\Facades\Image;
 	
-	class AdminArticleController extends Controller {
+	class AdminArticleController extends AdminController{
+		
 		/**
 		 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
 		 */
 		public function index() {
+			
 			$articles = Article::orderBy('id')->paginate(config('settings.admin_pagination', 15));
 			$articles->load('user');
 			$articles->load('category');
-			$title = __('system.articles_list');
+			$this->vars['articles'] = $articles;
+			$this->title            = __('system.articles_list');
+			$this->template         = 'admin.articles';
 			
-			return view('admin.articles', [
-				'title'    => $title,
-				'articles' => $articles,
-			]);
+			return $this->renderOutput();
 		}
 		
 		/**
@@ -38,12 +39,12 @@
 			
 			$categories = AdminCategoryController::getCategoriesList();
 			
-			return view('admin.article', [
-				'title'      => __('article.article_edit'),
-				'article'    => $article,
-				'categories' => $categories,
+			$this->vars['article']    = $article;
+			$this->vars['categories'] = $categories;
+			$this->title              = __('system.article_edit');
+			$this->template           = 'admin.article';
 			
-			]);
+			return $this->renderOutput();
 		}
 		
 		/**
@@ -57,11 +58,14 @@
 			
 			$categories = AdminCategoryController::getCategoriesList();
 			
-			return view('admin.article', [
-				'title'      => __('article.article_add'),
-				'article'    => $article,
-				'categories' => $categories,
-			]);
+			$this->vars['article']    = $article;
+			$this->vars['categories'] = $categories;
+			$this->title              = __('system.article_add');
+			$this->template           = 'admin.article';
+			
+			return $this->renderOutput();
+			
+			
 		}
 		
 		/**

@@ -1,8 +1,8 @@
 @foreach($items as $item)
     @if($item->hasParent())
-        <li class="{{ url()->current() == $item->url() ? 'active' : '' }} {{$item->hasChildren()?'dropdown':''}} nav-item">
+        <li class="{{$item->hasChildren()?'dropdown':''}} nav-item">
     @else
-        <li class="{{ url()->current() == $item->url() ? 'active' : '' }} {{$item->hasChildren()?'dropdown':''}} nav-item">
+        <li class="{{$item->hasChildren()?'dropdown':''}} nav-item">
             @endif
 
             @if($item->hasChildren())

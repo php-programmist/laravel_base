@@ -2,23 +2,25 @@
 	
 	namespace App\Http\Controllers;
 	
-	use Illuminate\Http\Request;
 	use App\Group;
-	class AdminGroupController extends Controller {
+	use Illuminate\Http\Request;
+	
+	class AdminGroupController extends AdminController{
 		/**
 		 * Display a listing of the resource.
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function index() {
+		public function index(){
 			$groups = Group::orderBy('id')->paginate(config('settings.admin_pagination', 15));
 			$groups->load('users');
-			$title = __('system.groups_list');
 			
-			return view('admin.groups', [
-				'title'  => $title,
-				'groups' => $groups,
-			]);
+			$this->vars['groups'] = $groups;
+			$this->title          = __('system.groups_list');
+			$this->template       = 'admin.groups';
+			
+			return $this->renderOutput();
+			
 		}
 		
 		/**
@@ -26,18 +28,17 @@
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function create() {
-			if ( !\Auth::user()->hasRole('Super User') ) {
+		public function create(){
+			if( !\Auth::user()->hasRole('Super User') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
 			}
 			
-			$group = new Group();
+			$this->vars['group'] = new Group();
+			$this->title         = __('system.group_create');
+			$this->template      = 'admin.group';
 			
-			return view('admin.group', [
-				'title' => __('system.group_create'),
-				'group' => $group,
+			return $this->renderOutput();
 			
-			]);
 		}
 		
 		/**
@@ -47,22 +48,21 @@
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function store(Request $request) {
-			if ( !\Auth::user()->hasRole('Super User') ) {
+		public function store(Request $request){
+			if( !\Auth::user()->hasRole('Super User') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
 			}
 			$group = new Group();
 			
 			$request->validate([
-				'name' => 'required|max:255|unique:groups',
-			]);
+				                   'name' => 'required|max:255|unique:groups',
+			                   ]);
 			$data        = $request->except('_token');
 			$group->name = $data['name'];
 			$group->save();
 			
 			return task_route($data['task'], 'admin.groups', __('system.group_created'), $group->id);
 		}
-		
 		
 		/**
 		 * Show the form for editing the specified resource.
@@ -71,22 +71,21 @@
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function edit($id) {
+		public function edit($id){
 			$group = Group::find($id);
-			if ( !\Auth::user()->hasRole('Super User') ) {
+			if( !\Auth::user()->hasRole('Super User') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
 			}
 			
-			if ( $group->name == 'Super User' ) {
+			if( $group->name == 'Super User' ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ])->withInput();
 			}
+			$this->vars['group'] = $group;
+			$this->title         = __('system.group_edit');
+			$this->template      = 'admin.group';
 			
+			return $this->renderOutput();
 			
-			return view('admin.group', [
-				'title' => __('system.group_edit'),
-				'group' => $group,
-			
-			]);
 		}
 		
 		/**
@@ -97,18 +96,18 @@
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function update(Request $request, $id) {
+		public function update(Request $request, $id){
 			$group = Group::find($id);
-			if ( !\Auth::user()->hasRole('Super User') ) {
+			if( !\Auth::user()->hasRole('Super User') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
 			}
-			if ( $group->name == 'Super User' ) {
+			if( $group->name == 'Super User' ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ])->withInput();
 			}
 			
 			$request->validate([
-				'name' => 'required|max:255|unique:groups,name,' . $id,
-			]);
+				                   'name' => 'required|max:255|unique:groups,name,' . $id,
+			                   ]);
 			$data        = $request->except('_token');
 			$group->name = $data['name'];
 			$group->save();
@@ -123,19 +122,19 @@
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function destroy($id) {
+		public function destroy($id){
 			$group = Group::find($id);
-			if ( !\Auth::user()->hasRole('Super User') ) {
+			if( !\Auth::user()->hasRole('Super User') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete') ]);
 			}
-			if ( $group->name == 'Super User' ) {
+			if( $group->name == 'Super User' ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete_SU') ])->withInput();
 			}
 			
-			try {
+			try{
 				$group->delete();
 			}
-			catch (\Exception $e) {
+			catch( \Exception $e ){
 				\Session::flash('error', $e->getMessage());
 			}
 			
