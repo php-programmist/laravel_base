@@ -2,9 +2,8 @@
 	
 	namespace App\Http\Controllers;
 	
-	use Illuminate\Http\Request;
 	use App\Article;
-	
+	use Illuminate\Http\Request;
 	
 	class ArticleController extends SiteController {
 		
@@ -18,7 +17,7 @@
 			$cat_id         = $cat_slug ? (int) explode('-', $cat_slug)[0] : 0;
 			$ids            = [];
 			if ( $cat_id ) {
-				$this->vars['title'] = \App\Category::find($cat_id)->title;
+				$this->vars['title'] = \App\Category::findOrFail($cat_id)->title;
 				$categories          = AdminCategoryController::getCategoriesTree('', $cat_id);
 				
 				$ids   = $categories->pluck('id')->all();

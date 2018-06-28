@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -46,6 +47,24 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+	    if( $this->isHttpException($exception) OR $exception instanceof ModelNotFoundException ){
+		    if( method_exists($exception, 'getStatusCode') ){
+			    $statusCode = $exception->getStatusCode();
+		    }
+		    else{
+			    $statusCode = '404';
+		    }
+		
+		    switch( $statusCode ){
+			    case '404' :
+				    $controller                = new \App\Http\Controllers\SiteController();
+				    $controller->template      = 'errors.404';
+				    $controller->vars['title'] = '404 - ' . __('system.page_not_found');
+				    \Log::alert(__('system.page_not_found') . ' - ' . $request->url());
+				
+				    return response($controller->renderOutput());
+		    }
+	    }
         return parent::render($request, $exception);
     }
 }

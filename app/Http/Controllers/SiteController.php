@@ -2,19 +2,15 @@
 	
 	namespace App\Http\Controllers;
 	
-	use Illuminate\Http\Request;
-	
-	
 	class SiteController extends Controller {
-		protected $template;
-		protected $vars = array();
+		public $template;
+		public $vars = array();
 		
 		public function __construct() {
 		
 		}
 		
-		
-		protected function renderOutput() {
+		public function renderOutput(){
 			
 			$navigation = \Cache::remember('menus', config('settings.cache_menus', 0), function () {
 				$menu = $this->getMenu();

@@ -8,8 +8,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ $title }}</title>
+    
+    <title>{{ $title OR 'Untitled' }}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -29,7 +29,7 @@
 
 <!-- Navigation -->
 @section('navigation')
-    {!! $navigation !!}
+    {!! $navigation OR '' !!}
 @endsection
 @yield('navigation')
 
@@ -74,7 +74,7 @@
                 <h5 class="card-header">{{ __('system.categories_list') }}</h5>
                 <div class="card-body">
                     <div class="row">
-                        @if($categories)
+                        @if(!empty($categories))
                             <div class="col-lg-6">
                                 <ul class="list-unstyled mb-0">
                                     @foreach($categories as $k => $category)
