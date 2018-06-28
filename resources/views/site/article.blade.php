@@ -1,5 +1,13 @@
 @extends('site.layouts.blog')
 
+@section('scripts')
+	<script src="{{ asset('js/comments.js') }}"></script>
+@endsection
+
+@section('styles')
+	<link href="{{ asset('css/comments.css') }}" rel="stylesheet">
+@endsection
+
 @section('content')
     @if ($article)
 

@@ -20,9 +20,9 @@
 
 <!-- Custom styles for this template -->
     <link href="{{ asset('css/blog-home.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/comments.css') }}" rel="stylesheet">
+    
     <link href="{{ asset('css/site.css') }}" rel="stylesheet">
-
+    @yield('styles')
 </head>
 
 <body>
@@ -123,10 +123,10 @@
 
 <!-- Bootstrap core JavaScript -->
 <script src="{{ asset('jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('js/myscripts.js') }}"></script>
+
 <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('bootstrap/js/bootstrap-4-navbar.js') }}"></script>
-
+@yield('scripts')
 </body>
 
 </html>

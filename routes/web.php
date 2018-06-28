@@ -15,9 +15,12 @@
 	/** @noinspection PhpUndefinedMethodInspection */
 	Auth::routes();
 	Route::get('/', 'ArticleController@index')->name('home');
-	Route::get('articles/{slug}', 'ArticleController@show')->name('articles');
-	Route::get('articles/cat/{cat_slug}', [ 'uses' => 'ArticleController@index', 'as' => 'articlesCat' ]);
+	Route::get('articles/{slug}', 'ArticleController@show')->name('articles')->where('slug', '[\w-]+');
+	Route::get('articles/cat/{cat_slug}', [ 'uses' => 'ArticleController@index', 'as' => 'articlesCat' ])->where('slug', '[\w-]+');
 	Route::resource('comment', 'CommentController', [ 'only' => 'store' ]);
+	
+	Route::get('/contacts', 'ContactController@index')->name('contacts');
+	Route::post('/contacts', 'ContactController@post');
 	
 	Route::group([ 'middleware' => [ 'auth' ], 'prefix' => 'admin', 'as' => 'admin.' ], function () {
 		Route::get('/', function () {

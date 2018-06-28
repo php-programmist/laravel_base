@@ -5,3 +5,8 @@
 .pagination {
     justify-content: center;
 }
+
+.input-group-btn {
+    display: block;
+    text-align: center;
+}
