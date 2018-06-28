@@ -23,10 +23,7 @@
 	Route::post('/contacts', 'ContactController@post');
 	
 	Route::group([ 'middleware' => [ 'auth' ], 'prefix' => 'admin', 'as' => 'admin.' ], function () {
-		Route::get('/', function () {
-			return redirect()->route('admin.users.index');
-		});
-		//Route::get('/dashboard', 'AdminController@index')->name('dashboard');
+		Route::get('/', 'AdminIndexController@index')->name('dashboard');
 		
 		Route::resource('/articles', 'AdminArticleController');
 		Route::resource('/users', 'AdminUserController');

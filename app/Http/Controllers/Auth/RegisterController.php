@@ -80,4 +80,12 @@ class RegisterController extends Controller
 	
 	    return $user;
     }
+	
+	protected function redirectTo(){
+		if( \Auth::user()->canDo('VIEW_ADMIN') ){
+			return '/admin';
+		}
+		
+		return '/';
+	}
 }

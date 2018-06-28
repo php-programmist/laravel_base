@@ -16,6 +16,7 @@
                     <th>{{__('system.title')}}</th>
 
                     <th>{{__('system.users_num')}}</th>
+                    <th>{{__('system.permissions')}}</th>
 
                     <th></th>
                 </tr>
@@ -27,6 +28,7 @@
                         </td>
 
                         <td>{{ count($group->users) }}</td>
+                        <td>{{ count($group->permissions) }}</td>
                         <td>
                             @if($group->name!='Super User')
                             {!! Form::open([

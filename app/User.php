@@ -2,10 +2,10 @@
 	
 	namespace App;
 	
-	use Illuminate\Notifications\Notifiable;
 	use Illuminate\Foundation\Auth\User as Authenticatable;
+	use Illuminate\Notifications\Notifiable;
 	
-	class User extends Authenticatable {
+	class User extends Authenticatable{
 		use Notifiable;
 		
 		/**
@@ -26,34 +26,78 @@
 			'password', 'remember_token',
 		];
 		
-		public function articles() {
+		public function articles(){
 			return $this->hasMany('App\Article');
 		}
 		
-		public function comments() {
+		public function comments(){
 			return $this->hasMany('App\Comments');
 		}
 		
+		public function groups(){
+			return $this->belongsToMany('App\Group');
+		}
+		
 		/**
-		 * Check if User has some role
+		 * Check if User has some group
 		 *
-		 * @param $role - name of group. Field groups.name
+		 * @param $group   - name of group or array of group names. Field groups.name
+		 * @param $require - does user have all groups
 		 *
 		 * @return bool
 		 */
-		public function hasRole($role) {
-			$groups = $this->groups;
-			foreach ($groups as $group) {
-				if ( $group->name == $role ) {
-					return true;
+		public function hasRole($name, $require = false){
+			if( is_array($name) ){
+				foreach( $name as $groupName ){
+					$hasRole = $this->hasRole($groupName);
+					
+					if( $hasRole && !$require ){
+						return true;
+					}
+					elseif( !$hasRole && $require ){
+						return false;
+					}
+				}
+				
+				return $require;
+			}
+			else{
+				foreach( $this->groups as $group ){
+					if( $group->name == $name ){
+						return true;
+					}
 				}
 			}
 			
 			return false;
 		}
 		
-		
-		public function groups() {
-			return $this->belongsToMany('App\Group');
+		public function canDo($permission, $require = false){
+			if( is_array($permission) ){
+				foreach( $permission as $permName ){
+					
+					$permName = $this->canDo($permName);
+					if( $permName && !$require ){
+						return true;
+					}
+					else if( !$permName && $require ){
+						return false;
+					}
+				}
+				
+				return $require;
+			}
+			else{
+				foreach( $this->groups as $group ){
+					foreach( $group->permissions as $perm ){
+						
+						if( str_is($permission, $perm->name) ){
+							return true;
+						}
+					}
+				}
+			}
+			
+			return false;
 		}
 	}

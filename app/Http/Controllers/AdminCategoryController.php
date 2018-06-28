@@ -12,6 +12,9 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function index(){
+			if( !\Auth::user()->canDo('VIEW_CATEGORIES') ){
+				return redirect()->back()->with([ 'message' => __('system.not_allowed_view') ])->withInput();
+			}
 			$categories = self::getCategoriesTree('<span class="categoryLevel">&nbsp;&nbsp;&nbsp;<sup>|_</sup>&nbsp;</span>');
 			
 			$this->vars['categories'] = $categories;
@@ -28,7 +31,7 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function create(){
-			if( !\Auth::user()->hasRole('Super User') ){
+			if( !\Auth::user()->canDo('ADD_CATEGORIES') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
 			}
 			
@@ -49,7 +52,7 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function store(Request $request){
-			if( !\Auth::user()->hasRole('Super User') ){
+			if( !\Auth::user()->canDo('ADD_CATEGORIES') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
 			}
 			$request->validate([
@@ -76,7 +79,7 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function edit(Category $category){
-			if( !\Auth::user()->hasRole('Super User') ){
+			if( !\Auth::user()->canDo('EDIT_CATEGORIES') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
 			}
 			
@@ -98,7 +101,7 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function update(Request $request, Category $category){
-			if( !\Auth::user()->hasRole('Super User') ){
+			if( !\Auth::user()->canDo('EDIT_CATEGORIES') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
 			}
 			$request->validate([
@@ -124,7 +127,7 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function destroy(Category $category){
-			if( !\Auth::user()->hasRole('Super User') ){
+			if( !\Auth::user()->canDo('DELETE_CATEGORIES') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete') ]);
 			}
 			

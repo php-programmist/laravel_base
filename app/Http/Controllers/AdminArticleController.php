@@ -16,7 +16,9 @@
 		 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
 		 */
 		public function index() {
-			
+			if( !\Auth::user()->canDo('VIEW_ARTICLES') ){
+				return redirect()->back()->with([ 'message' => __('system.not_allowed_view') ])->withInput();
+			}
 			$articles = Article::orderBy('id')->paginate(config('settings.admin_pagination', 15));
 			$articles->load('user');
 			$articles->load('category');
@@ -33,8 +35,8 @@
 		 * @return $this|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
 		 */
 		public function edit(Article $article) {
-			if ( \Auth::user()->cannot('update', $article) ) {
-				return redirect()->back()->with([ 'message' => __('article.not_allowed_update') ])->withInput();
+			if( !\Auth::user()->canDo('EDIT_ARTICLES') ){
+				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ])->withInput();
 			}
 			
 			$categories = AdminCategoryController::getCategoriesList();
@@ -52,7 +54,7 @@
 		 */
 		public function create() {
 			$article = new Article();
-			if ( \Auth::user()->cannot('add', $article) ) {
+			if( !\Auth::user()->canDo('ADD_ARTICLES') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ])->withInput();
 			}
 			
@@ -77,7 +79,7 @@
 		public function update(AdminArticleRequest $request, Article $article) {
 			
 			$user = Auth::user();
-			if ( $request->user()->cannot('update', $article) ) {
+			if( !\Auth::user()->canDo('EDIT_ARTICLES') ){
 				return redirect()->back()->with([ 'message' => __('article.not_allowed_update') ])->withInput();
 			}
 			
@@ -99,7 +101,7 @@
 		public function store(AdminArticleRequest $request) {
 			$article = new Article();
 			
-			if ( $request->user()->cannot('add', $article) ) {
+			if( !\Auth::user()->canDo('ADD_ARTICLES') ){
 				return redirect()->back()->with([ 'message' => __('article.not_allowed_create') ])->withInput();
 			}
 			
@@ -123,7 +125,7 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function destroy(Article $article) {
-			if ( !\Auth::user()->hasRole('Super User') ) {
+			if( !\Auth::user()->canDo('DELETE_ARTICLES') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete') ]);
 			}
 			

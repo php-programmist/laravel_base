@@ -31,3 +31,11 @@
 			}
 		}
 	}
+	
+	if( !function_exists('perm_translate') ){
+		function perm_translate($perm_name){
+			list($action, $view) = explode("_", $perm_name);
+			
+			return __('system.' . strtolower($view)) . ": " . __('system.' . strtolower($action));
+		}
+	}

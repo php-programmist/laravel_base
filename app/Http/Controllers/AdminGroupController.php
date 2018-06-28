@@ -12,8 +12,12 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function index(){
+			if( !\Auth::user()->canDo('VIEW_GROUPS') ){
+				return redirect()->back()->with([ 'message' => __('system.not_allowed_view') ])->withInput();
+			}
 			$groups = Group::orderBy('id')->paginate(config('settings.admin_pagination', 15));
 			$groups->load('users');
+			$groups->load('permissions');
 			
 			$this->vars['groups'] = $groups;
 			$this->title          = __('system.groups_list');
@@ -29,7 +33,7 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function create(){
-			if( !\Auth::user()->hasRole('Super User') ){
+			if( !\Auth::user()->canDo('ADD_GROUPS') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
 			}
 			
@@ -49,7 +53,7 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function store(Request $request){
-			if( !\Auth::user()->hasRole('Super User') ){
+			if( !\Auth::user()->canDo('ADD_GROUPS') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
 			}
 			$group = new Group();
@@ -60,6 +64,11 @@
 			$data        = $request->except('_token');
 			$group->name = $data['name'];
 			$group->save();
+			
+			$new_permissions = $request->get('permissions', []);
+			if( $new_permissions ){
+				$group->permissions()->attach($new_permissions);
+			}
 			
 			return task_route($data['task'], 'admin.groups', __('system.group_created'), $group->id);
 		}
@@ -73,16 +82,19 @@
 		 */
 		public function edit($id){
 			$group = Group::find($id);
-			if( !\Auth::user()->hasRole('Super User') ){
+			if( !\Auth::user()->canDo('EDIT_GROUPS') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
 			}
 			
 			if( $group->name == 'Super User' ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ])->withInput();
 			}
-			$this->vars['group'] = $group;
-			$this->title         = __('system.group_edit');
-			$this->template      = 'admin.group';
+			
+			$this->vars['group']       = $group;
+			$this->vars['group_perms'] = $group->permissions->pluck('id')->all();
+			$this->vars['permissions'] = \App\Permission::all();
+			$this->title               = __('system.group_edit');
+			$this->template            = 'admin.group';
 			
 			return $this->renderOutput();
 			
@@ -98,7 +110,7 @@
 		 */
 		public function update(Request $request, $id){
 			$group = Group::find($id);
-			if( !\Auth::user()->hasRole('Super User') ){
+			if( !\Auth::user()->canDo('EDIT_GROUPS') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
 			}
 			if( $group->name == 'Super User' ){
@@ -112,6 +124,20 @@
 			$group->name = $data['name'];
 			$group->save();
 			
+			$new_permissions = $request->get('permissions', []);
+			$old_permissions = $group->permissions->pluck('id')->all();
+			
+			$detach_ids = array_diff($old_permissions, $new_permissions);
+			$attach_ids = array_diff($new_permissions, $old_permissions);
+			
+			if( count($attach_ids) ){
+				$group->permissions()->attach($attach_ids);
+			}
+			
+			if( count($detach_ids) ){
+				$group->permissions()->detach($detach_ids);
+			}
+			
 			return task_route($data['task'], 'admin.groups', __('system.group_updated'), $group->id);
 		}
 		
@@ -124,7 +150,7 @@
 		 */
 		public function destroy($id){
 			$group = Group::find($id);
-			if( !\Auth::user()->hasRole('Super User') ){
+			if( !\Auth::user()->canDo('DELETE_GROUPS') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete') ]);
 			}
 			if( $group->name == 'Super User' ){

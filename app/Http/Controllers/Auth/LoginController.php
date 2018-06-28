@@ -41,4 +41,12 @@ class LoginController extends Controller
 	{
 		return 'username';
 	}
+	
+	protected function redirectTo(){
+		if( \Auth::user()->canDo('VIEW_ADMIN') ){
+			return '/admin';
+		}
+		
+		return '/';
+	}
 }

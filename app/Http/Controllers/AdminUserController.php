@@ -13,6 +13,9 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function index(){
+			if( !\Auth::user()->canDo('VIEW_USERS') ){
+				return redirect()->back()->with([ 'message' => __('system.not_allowed_view') ])->withInput();
+			}
 			$users = User::paginate(config('settings.admin_pagination', 15));
 			$users->load('groups');
 			
@@ -30,7 +33,7 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function create(){
-			if( !\Auth::user()->hasRole('Super User') ){
+			if( !\Auth::user()->canDo('ADD_USERS') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
 			}
 			
@@ -46,12 +49,12 @@
 		/**
 		 * Store a newly created resource in storage.
 		 *
-		 * @param  \Illuminate\Http\Request $request
+		 * @param  \App\Http\Requests\AdminUserRequest $request
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
 		public function store(AdminUserRequest $request){
-			if( !$request->user()->hasRole('Super User') ){
+			if( !\Auth::user()->canDo('ADD_USERS') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ])->withInput();
 			}
 			
@@ -79,7 +82,7 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function edit($id){
-			if( !\Auth::user()->hasRole('Super User') ){
+			if( !\Auth::user()->canDo('EDIT_USERS') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
 			}
 			
@@ -101,7 +104,7 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function update(AdminUserRequest $request, $id){
-			if( !$request->user()->hasRole('Super User') ){
+			if( !\Auth::user()->canDo('EDIT_USERS') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ])->withInput();
 			}
 			$user = User::findOrFail($id);
@@ -140,7 +143,7 @@
 		 * @return \Illuminate\Http\Response
 		 */
 		public function destroy($id){
-			if( !\Auth::user()->hasRole('Super User') ){
+			if( !\Auth::user()->canDo('DELETE_USERS') ){
 				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete') ]);
 			}
 			
