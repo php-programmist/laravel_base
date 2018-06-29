@@ -125,17 +125,11 @@
 			$group->save();
 			
 			$new_permissions = $request->get('permissions', []);
-			$old_permissions = $group->permissions->pluck('id')->all();
-			
-			$detach_ids = array_diff($old_permissions, $new_permissions);
-			$attach_ids = array_diff($new_permissions, $old_permissions);
-			
-			if( count($attach_ids) ){
-				$group->permissions()->attach($attach_ids);
+			if( $new_permissions ){
+				$group->permissions()->sync($new_permissions);
 			}
-			
-			if( count($detach_ids) ){
-				$group->permissions()->detach($detach_ids);
+			else{
+				$group->permissions()->detach();
 			}
 			
 			return task_route($data['task'], 'admin.groups', __('system.group_updated'), $group->id);

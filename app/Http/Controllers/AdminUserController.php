@@ -119,17 +119,12 @@
 			$user->save();
 			
 			$new_groups = $request->get('groups', []);
-			$old_groups = $user->groups->pluck('id')->all();
 			
-			$detach_ids = array_diff($old_groups, $new_groups);
-			$attach_ids = array_diff($new_groups, $old_groups);
-			
-			if( count($attach_ids) ){
-				$user->groups()->attach($attach_ids);
+			if( $new_groups ){
+				$user->groups()->sync($new_groups);
 			}
-			
-			if( count($detach_ids) ){
-				$user->groups()->detach($detach_ids);
+			else{
+				$user->groups()->detach();
 			}
 			
 			return task_route($data['task'], 'admin.users', __('system.user_updated'), $user->id);

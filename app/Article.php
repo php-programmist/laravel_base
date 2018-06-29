@@ -34,25 +34,26 @@
 			}
 			if ( $request->hasFile('image') ) {
 				$file = $request->file('image');
-				if ( strstr($file->getClientMimeType(), 'image/') ) {
-					$image_name = time() . '_' . $file->getClientOriginalName();
+				if( $file->isValid() AND strstr($file->getClientMimeType(), 'image/') ){
+					$image_name = str_random(6) . '_' . $file->getClientOriginalName();
 					if ( !file_exists(public_path('images')) ) {
 						mkdir(public_path('images'), 0777);
 					}
-					if ( !file_exists(public_path('images' . DIRECTORY_SEPARATOR . 'articles')) ) {
-						mkdir(public_path('images' . DIRECTORY_SEPARATOR . 'articles'), 0777);
+					if( !file_exists(public_path('images/articles')) ){
+						mkdir(public_path('images/articles'), 0777);
 					}
-					$file->move(public_path('images' . DIRECTORY_SEPARATOR . 'articles'), $image_name);
-					$image_info       = getimagesize(public_path('images' . DIRECTORY_SEPARATOR . 'articles') . DIRECTORY_SEPARATOR . $image_name);
+					$file->move(public_path('images/articles'), $image_name);
+					$image_info       = getimagesize(public_path('images/articles/') . $image_name);
 					$max_image_width  = config('settings.max_image_width', 750);
 					$max_image_height = config('settings.max_image_height', 300);
+					
 					if ( $image_info[0] > $max_image_width OR $image_info[1] > $max_image_height ) {
 						try {
-							$image = Image::make(public_path('images' . DIRECTORY_SEPARATOR . 'articles') . DIRECTORY_SEPARATOR . $image_name);
+							$image = Image::make(public_path('images/articles/') . $image_name);
 							$image->fit($max_image_width, $max_image_height, function ($constraint) {
 								$constraint->upsize();
 							});
-							$image->save(public_path('images' . DIRECTORY_SEPARATOR . 'articles') . DIRECTORY_SEPARATOR . $image_name);
+							$image->save(public_path('images/articles/') . $image_name);
 						}
 						catch (\Exception $e) {
 							\Session::flash('error', __('system.image_resize_error') . "<br>" . $e->getMessage());
@@ -61,8 +62,8 @@
 					$old_image   = $this->image;
 					$this->image = $image_name;
 					if ( $old_image ) {
-						if ( file_exists(public_path('images' . DIRECTORY_SEPARATOR . 'articles') . DIRECTORY_SEPARATOR . $old_image) ) {
-							unlink(public_path('images' . DIRECTORY_SEPARATOR . 'articles') . DIRECTORY_SEPARATOR . $old_image);
+						if( file_exists(public_path('images/articles/') . $old_image) ){
+							unlink(public_path('images/articles/') . $old_image);
 						}
 					}
 				}
