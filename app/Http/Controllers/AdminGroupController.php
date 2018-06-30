@@ -125,12 +125,9 @@
 			$group->save();
 			
 			$new_permissions = $request->get('permissions', []);
-			if( $new_permissions ){
-				$group->permissions()->sync($new_permissions);
-			}
-			else{
-				$group->permissions()->detach();
-			}
+			
+			$group->permissions()->sync($new_permissions);
+			
 			
 			return task_route($data['task'], 'admin.groups', __('system.group_updated'), $group->id);
 		}

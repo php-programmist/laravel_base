@@ -13,7 +13,7 @@
 		 */
 		public function index(){
 			if( !\Auth::user()->canDo('VIEW_CATEGORIES') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_view') ])->withInput();
+				return redirect()->back()->with([ 'message' => __('system.not_allowed_view') ]);
 			}
 			$categories = self::getCategoriesTree('<span class="categoryLevel">&nbsp;&nbsp;&nbsp;<sup>|_</sup>&nbsp;</span>');
 			

@@ -1,8 +1,8 @@
 <?php
 	
-	use Illuminate\Support\Facades\Schema;
-	use Illuminate\Database\Schema\Blueprint;
 	use Illuminate\Database\Migrations\Migration;
+	use Illuminate\Database\Schema\Blueprint;
+	use Illuminate\Support\Facades\Schema;
 	
 	class CreateMenusTable extends Migration {
 		/**
@@ -16,6 +16,7 @@
 				$table->string('title');
 				$table->string('path');
 				$table->integer('parent_id')->unsigned()->default(0);
+				$table->string('element')->nullable();
 				$table->integer('ordering')->default(0);
 				$table->timestamps();
 			});

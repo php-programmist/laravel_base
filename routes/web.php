@@ -15,6 +15,7 @@
 	/** @noinspection PhpUndefinedMethodInspection */
 	Auth::routes();
 	Route::get('/', 'ArticleController@index')->name('home');
+	Route::get('/articles', 'ArticleController@index')->name('articlesAll');
 	Route::get('articles/{slug}', 'ArticleController@show')->name('articles')->where('slug', '[\w-]+');
 	Route::get('articles/cat/{cat_slug}', [ 'uses' => 'ArticleController@index', 'as' => 'articlesCat' ])->where('slug', '[\w-]+');
 	Route::resource('comment', 'CommentController', [ 'only' => 'store' ]);

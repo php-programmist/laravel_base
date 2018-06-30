@@ -41,9 +41,9 @@
 			
 			$validator = \Validator::make($data, [
 				
-				'article_id' => 'integer|required',
-				'parent_id'  => 'integer|required',
-				'text'       => 'string|required',
+				'article_id' => 'required|integer',
+				'parent_id'  => 'required|integer',
+				'text'       => 'required|string',
 			
 			]);
 			

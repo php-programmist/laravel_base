@@ -1,40 +1,37 @@
 @extends('layouts.admin')
 
 @section('toolbar')
-    <a href="{{ route('admin.articles.create') }}">
+    <a href="{{ route('admin.menus.create') }}">
         <button class="btn btn-success m-2">{{__('system.add')}}</button>
     </a>
 @endsection
 
 @section('content')
-
-    @if ($articles)
+    
+    @if ($menus)
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <tr>
                     <th>Id</th>
                     <th>{{__('system.title')}}</th>
-                    <th>{{__('system.alias')}}</th>
-                    <th>{{__('system.username')}}</th>
-                    <th>{{__('system.state')}}</th>
-                    <th>{{__('system.created_at')}}</th>
+
                     <th>{{__('system.link')}}</th>
+                    <th>{{__('system.element')}}</th>
                     <th></th>
                 </tr>
-                @foreach($articles as $article)
+                @foreach($menus as $menu)
                     <tr>
-                        <td>{{ $article->id }}</td>
-                        <td><a href="{{ route('admin.articles.edit',$article->id) }}">{{ $article->name }}</a></td>
-                        <td>{{ $article->alias }}</td>
-                        <td>{{ $article->user->username }}</td>
-                        <td>{{ $article->state?__('system.published'):__('system.unpublished') }}</td>
-                        <td>{{ $article->created_at->format('d.m.Y H:i') }}</td>
-                        <td><a target="_blank"
-                               href="{{ route('articles',$article->id.'-'.$article->alias) }}">{{ __('system.preview') }}</a>
+                        <td>{{ $menu->id }}</td>
+                        <td class="left">
+                            {!! $menu->level_delimiter !!}
+                            <a href="{{ route('admin.menus.edit',$menu->id) }}">{{ $menu->title }}</a>
                         </td>
+                        <td><a href="{{ $menu->link }}" target="_blank">{{ $menu->link }}</a></td>
+                        <td>{{ __('system.'.$menu->element) }}</td>
+    
                         <td>
                             {!! Form::open([
-                                'url'=>route('admin.articles.destroy',['article'=>$article->id]),
+                                'url'=>route('admin.menus.destroy',['menu'=>$menu->id]),
                                 'class'=>'form-horizontal',
                                 'method'=>'DELETE'
                             ]) !!}
@@ -46,7 +43,7 @@
                 @endforeach
             </table>
         </div>
-        <div class="center">{{ $articles->links() }}</div>
+        {{--<div class="center">{{ $menus->links() }}</div>--}}
     @endif
 
 

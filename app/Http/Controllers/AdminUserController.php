@@ -61,7 +61,7 @@
 			$user = new User();
 			$data = $request->all();
 			$user->fill($data);
-			$user->password = \Hash::make($data['password']);
+			$user->password = bcrypt($data['password']);
 			
 			$user->save();
 			
@@ -110,7 +110,7 @@
 			$user = User::findOrFail($id);
 			$data = $request->all();
 			if( $request->filled('password') ){
-				$data['password'] = \Hash::make($data['password']);
+				$data['password'] = bcrypt($data['password']);
 			}
 			else{
 				unset($data['password']);
@@ -120,12 +120,7 @@
 			
 			$new_groups = $request->get('groups', []);
 			
-			if( $new_groups ){
-				$user->groups()->sync($new_groups);
-			}
-			else{
-				$user->groups()->detach();
-			}
+			$user->groups()->sync($new_groups);
 			
 			return task_route($data['task'], 'admin.users', __('system.user_updated'), $user->id);
 		}
