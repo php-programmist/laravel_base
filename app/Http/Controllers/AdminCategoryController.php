@@ -3,9 +3,10 @@
 	namespace App\Http\Controllers;
 	
 	use App\Category;
-	use Illuminate\Http\Request;
-	
-	class AdminCategoryController extends AdminController{
+    use Illuminate\Http\Request;
+    
+    class AdminCategoryController extends AdminController
+    {
 		/**
 		 * Display a listing of the resource.
 		 *
@@ -13,7 +14,7 @@
 		 */
 		public function index(){
 			if( !\Auth::user()->canDo('VIEW_CATEGORIES') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_view') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_view')]);
 			}
 			$categories = self::getCategoriesTree('<span class="categoryLevel">&nbsp;&nbsp;&nbsp;<sup>|_</sup>&nbsp;</span>');
 			
@@ -32,7 +33,7 @@
 		 */
 		public function create(){
 			if( !\Auth::user()->canDo('ADD_CATEGORIES') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_create')]);
 			}
 			
 			$this->vars['categories'] = self::getCategoriesList();;
@@ -53,7 +54,7 @@
 		 */
 		public function store(Request $request){
 			if( !\Auth::user()->canDo('ADD_CATEGORIES') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_create')]);
 			}
 			$request->validate([
 				                   'title' => 'required|max:255',
@@ -80,7 +81,7 @@
 		 */
 		public function edit(Category $category){
 			if( !\Auth::user()->canDo('EDIT_CATEGORIES') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_update')]);
 			}
 			
 			$this->vars['categories'] = self::getCategoriesList();;
@@ -102,7 +103,7 @@
 		 */
 		public function update(Request $request, Category $category){
 			if( !\Auth::user()->canDo('EDIT_CATEGORIES') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_update')]);
 			}
 			$request->validate([
 				                   'title' => 'required|max:255',
@@ -128,11 +129,11 @@
 		 */
 		public function destroy(Category $category){
 			if( !\Auth::user()->canDo('DELETE_CATEGORIES') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_delete')]);
 			}
 			
 			if( $category->id == 1 ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_delete')]);
 			}
 			$children_num = 0;
 			try{
@@ -149,8 +150,10 @@
 			catch( \Exception $e ){
 				\Session::flash('error', $e->getMessage());
 			}
-			
-			return redirect()->back()->with([ 'message' => trans_choice('system.category_deleted', $children_num + 1, [ 'num' => $children_num + 1 ]) ]);
+            
+            return redirect()->back()->with([
+                'success' => trans_choice('system.category_deleted', $children_num + 1, ['num' => $children_num + 1]),
+            ]);
 		}
 		
 		public static function getCategoriesList(){

@@ -70,13 +70,7 @@
 				</div>
 			@endif
 			
-			@if(Session::has('error'))
-				<p class="alert alert-danger">{{ Session::get('error') }}</p>
-			@endif
-			
-			@if (Session::has('message'))
-				<div class="alert alert-info">{{ Session::get('message') }}</div>
-			@endif
+			@include('flash-message')
 			
 			@yield('content')
 		</div>

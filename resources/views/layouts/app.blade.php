@@ -45,8 +45,9 @@
 			</div>
 		</div>
 	</nav>
-	
-	<main class="py-4">
+	<main class="pt-5" id="app">
+		@include('flash-message')
+		
 		@yield('content')
 	</main>
 </div>

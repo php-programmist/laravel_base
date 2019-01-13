@@ -19,7 +19,7 @@
       integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">--}}
 
 <!-- Custom styles for this template -->
-    <link href="{{ asset('css/blog-home.css') }}" rel="stylesheet">
+    {{--<link href="{{ asset('css/blog-home.css') }}" rel="stylesheet">--}}
     
     <link href="{{ asset('css/site.css') }}" rel="stylesheet">
     @yield('styles')
@@ -39,14 +39,8 @@
     <div class="row">
 
         <!-- Blog Entries Column -->
-        <div class="col-md-8">
-            @if(Session::has('error'))
-                <p class="alert alert-danger">{{ Session::get('error') }}</p>
-            @endif
-
-            @if (Session::has('message'))
-                <div class="alert alert-info">{{ Session::get('message') }}</div>
-            @endif
+        <div class="col-md-8 mt-2" id="app">
+            @include('flash-message')
 
             @yield('content')
 

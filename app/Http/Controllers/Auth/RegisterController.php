@@ -77,6 +77,7 @@ class RegisterController extends Controller
 	    if( $default_user_group ){
 		    $user->groups()->attach($default_user_group);
 	    }
+        session()->flash('success', __('system.registration_success'));
 	
 	    return $user;
     }
@@ -85,7 +86,6 @@ class RegisterController extends Controller
 		if( \Auth::user()->canDo('VIEW_ADMIN') ){
 			return '/admin';
 		}
-		
 		return '/';
 	}
 }

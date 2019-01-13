@@ -3,9 +3,10 @@
 	namespace App\Http\Controllers;
 	
 	use App\Group;
-	use Illuminate\Http\Request;
-	
-	class AdminGroupController extends AdminController{
+    use Illuminate\Http\Request;
+    
+    class AdminGroupController extends AdminController
+    {
 		/**
 		 * Display a listing of the resource.
 		 *
@@ -13,7 +14,7 @@
 		 */
 		public function index(){
 			if( !\Auth::user()->canDo('VIEW_GROUPS') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_view') ])->withInput();
+                return redirect()->back()->with(['warning' => __('system.not_allowed_view')])->withInput();
 			}
 			$groups = Group::orderBy('id')->paginate(config('settings.admin_pagination', 15));
 			$groups->load('users');
@@ -34,7 +35,7 @@
 		 */
 		public function create(){
 			if( !\Auth::user()->canDo('ADD_GROUPS') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_create')]);
 			}
 			
 			$this->vars['group'] = new Group();
@@ -54,7 +55,7 @@
 		 */
 		public function store(Request $request){
 			if( !\Auth::user()->canDo('ADD_GROUPS') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_create')]);
 			}
 			$group = new Group();
 			
@@ -83,11 +84,11 @@
 		public function edit($id){
 			$group = Group::find($id);
 			if( !\Auth::user()->canDo('EDIT_GROUPS') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_update')]);
 			}
 			
 			if( $group->name == 'Super User' ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ])->withInput();
+                return redirect()->back()->with(['warning' => __('system.not_allowed_update')])->withInput();
 			}
 			
 			$this->vars['group']       = $group;
@@ -111,10 +112,10 @@
 		public function update(Request $request, $id){
 			$group = Group::find($id);
 			if( !\Auth::user()->canDo('EDIT_GROUPS') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_update')]);
 			}
 			if( $group->name == 'Super User' ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ])->withInput();
+                return redirect()->back()->with(['warning' => __('system.not_allowed_update')])->withInput();
 			}
 			
 			$request->validate([
@@ -142,10 +143,10 @@
 		public function destroy($id){
 			$group = Group::find($id);
 			if( !\Auth::user()->canDo('DELETE_GROUPS') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_delete')]);
 			}
 			if( $group->name == 'Super User' ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete_SU') ])->withInput();
+                return redirect()->back()->with(['warning' => __('system.not_allowed_delete_SU')])->withInput();
 			}
 			
 			try{
@@ -154,8 +155,8 @@
 			catch( \Exception $e ){
 				\Session::flash('error', $e->getMessage());
 			}
-			
-			return redirect()->back()->with([ 'message' => __('system.group_deleted') ]);
+            
+            return redirect()->back()->with(['success' => __('system.group_deleted')]);
 			
 		}
 	}

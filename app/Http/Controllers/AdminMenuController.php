@@ -3,9 +3,10 @@
 	namespace App\Http\Controllers;
 	
 	use App\Menu;
-	use Illuminate\Http\Request;
-	
-	class AdminMenuController extends AdminController{
+    use Illuminate\Http\Request;
+    
+    class AdminMenuController extends AdminController
+    {
 		/**
 		 * Display a listing of the resource.
 		 *
@@ -13,7 +14,7 @@
 		 */
 		public function index(){
 			if( !\Auth::user()->canDo('VIEW_MENU') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_view') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_view')]);
 			}
 			
 			$menus = self::getMenusTree('<span class="menuLevel">&nbsp;&nbsp;&nbsp;<sup>|_</sup>&nbsp;</span>');
@@ -32,7 +33,7 @@
 		 */
 		public function create(){
 			if( !\Auth::user()->canDo('ADD_MENU') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_create')]);
 			}
 			
 			$this->vars['menus']      = self::getMenusList();
@@ -56,7 +57,7 @@
 		 */
 		public function store(Request $request){
 			if( !\Auth::user()->canDo('ADD_MENU') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_create')]);
 			}
 			$request->validate([
 				                   'title'    => 'required|max:255',
@@ -88,7 +89,7 @@
 		 */
 		public function edit(Menu $menu){
 			if( !\Auth::user()->canDo('EDIT_MENU') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_update')]);
 			}
 			
 			$this->vars['menus']      = self::getMenusList();
@@ -113,7 +114,7 @@
 		 */
 		public function update(Request $request, Menu $menu){
 			if( !\Auth::user()->canDo('EDIT_MENU') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_update')]);
 			}
 			$request->validate([
 				                   'title'    => 'required|max:255',
@@ -143,7 +144,7 @@
 		 */
 		public function destroy(Menu $menu){
 			if( !\Auth::user()->canDo('DELETE_MENU') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_delete')]);
 			}
 			try{
 				if( count($menu->children) ){
@@ -161,8 +162,8 @@
 			catch( \Exception $e ){
 				\Session::flash('error', $e->getMessage());
 			}
-			
-			return redirect()->back()->with([ 'message' => __('system.menu_deleted') ]);
+            
+            return redirect()->back()->with(['success' => __('system.menu_deleted')]);
 		}
 		
 		public static function getMenusList(){

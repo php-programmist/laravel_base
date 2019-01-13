@@ -1,5 +1,5 @@
 @if($menu)
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top btco-hover-menu">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top btco-hover-menu">
 		<div class="container">
 			<a class="navbar-brand" href="{{ url('/') }}">{{ config('app.name', 'Laravel') }}</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"

@@ -3,10 +3,11 @@
 	namespace App\Http\Controllers;
 	
 	use App\Group;
-	use App\Http\Requests\AdminUserRequest;
-	use App\User;
-	
-	class AdminUserController extends AdminController{
+    use App\Http\Requests\AdminUserRequest;
+    use App\User;
+    
+    class AdminUserController extends AdminController
+    {
 		/**
 		 * Display a listing of the resource.
 		 *
@@ -14,7 +15,7 @@
 		 */
 		public function index(){
 			if( !\Auth::user()->canDo('VIEW_USERS') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_view') ])->withInput();
+                return redirect()->back()->with(['warning' => __('system.not_allowed_view')])->withInput();
 			}
 			$users = User::paginate(config('settings.admin_pagination', 15));
 			$users->load('groups');
@@ -34,7 +35,7 @@
 		 */
 		public function create(){
 			if( !\Auth::user()->canDo('ADD_USERS') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_create')]);
 			}
 			
 			$this->vars['user']   = new User();
@@ -55,7 +56,7 @@
 		 */
 		public function store(AdminUserRequest $request){
 			if( !\Auth::user()->canDo('ADD_USERS') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_create') ])->withInput();
+                return redirect()->back()->with(['warning' => __('system.not_allowed_create')])->withInput();
 			}
 			
 			$user = new User();
@@ -83,7 +84,7 @@
 		 */
 		public function edit($id){
 			if( !\Auth::user()->canDo('EDIT_USERS') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_update')]);
 			}
 			
 			$this->vars['user']   = User::find($id);
@@ -105,7 +106,7 @@
 		 */
 		public function update(AdminUserRequest $request, $id){
 			if( !\Auth::user()->canDo('EDIT_USERS') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_update') ])->withInput();
+                return redirect()->back()->with(['warning' => __('system.not_allowed_update')])->withInput();
 			}
 			$user = User::findOrFail($id);
 			$data = $request->all();
@@ -134,16 +135,16 @@
 		 */
 		public function destroy($id){
 			if( !\Auth::user()->canDo('DELETE_USERS') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_delete')]);
 			}
 			
 			$user = User::findOrFail($id);
 			if( $user->hasRole('Super User') ){
-				return redirect()->back()->with([ 'message' => __('system.not_allowed_delete_SU') ]);
+                return redirect()->back()->with(['warning' => __('system.not_allowed_delete_SU')]);
 			}
 			
 			$user->destroy($id);
-			
-			return redirect()->back()->with([ 'message' => __('system.user_deleted') ]);
+            
+            return redirect()->back()->with(['success' => __('system.user_deleted')]);
 		}
 	}
