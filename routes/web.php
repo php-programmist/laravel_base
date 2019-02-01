@@ -24,14 +24,14 @@ Route::get('/contacts', 'ContactController@index')->name('contacts');
 Route::post('/contacts', 'ContactController@post');
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
-    Route::get('/', 'AdminIndexController@index')->name('dashboard');
+    Route::get('/', 'Admin\IndexController@index')->name('dashboard');
     
-    Route::resource('/articles', 'AdminArticleController');
-    Route::resource('/users', 'AdminUserController');
-    Route::resource('/menus', 'AdminMenuController');
-    Route::resource('/categories', 'AdminCategoryController');
-    Route::resource('/comments', 'AdminCommentController');
-    Route::resource('/tags', 'AdminTagController');
-    Route::resource('/groups', 'AdminGroupController');
+    Route::resource('/articles', 'Admin\ArticleController');
+    Route::resource('/users', 'Admin\UserController');
+    Route::resource('/menus', 'Admin\MenuController');
+    Route::resource('/categories', 'Admin\CategoryController');
+    Route::resource('/comments', 'Admin\CommentController');
+    Route::resource('/tags', 'Admin\TagController');
+    Route::resource('/groups', 'Admin\GroupController');
 });
 	

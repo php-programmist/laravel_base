@@ -1,11 +1,12 @@
 <?php
-	
-	namespace App\Http\Controllers;
+
+namespace App\Http\Controllers\Admin;
 	
 	use App\Comment;
-	use Illuminate\Http\Request;
-	
-	class AdminCommentController extends AdminController{
+    use Illuminate\Http\Request;
+    
+    class CommentController extends AdminController
+    {
 		/**
 		 * Display a listing of the resource.
 		 *

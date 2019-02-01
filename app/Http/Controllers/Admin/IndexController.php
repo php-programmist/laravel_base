@@ -1,8 +1,9 @@
 <?php
-	
-	namespace App\Http\Controllers;
-	
-	class AdminIndexController extends AdminController{
+
+namespace App\Http\Controllers\Admin;
+
+class IndexController extends AdminController
+{
 		public function index(){
 			
 			if( !\Auth::user()->canDo('VIEW_ADMIN') ){

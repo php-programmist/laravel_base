@@ -1,11 +1,11 @@
 <?php
-	
-	namespace App\Http\Controllers;
+
+namespace App\Http\Controllers\Admin;
 	
 	use App\Menu;
     use Illuminate\Http\Request;
     
-    class AdminMenuController extends AdminController
+    class MenuController extends AdminController
     {
 		/**
 		 * Display a listing of the resource.
@@ -230,7 +230,7 @@
 		
 		public function getCategoriesList(){
 			$categories_list[''] = __('system.not_chosen');
-			$categories          = AdminCategoryController::getCategoriesTree();
+            $categories          = CategoryController::getCategoriesTree();
 			foreach( $categories as $category ){
 				$categories_list[ route('articlesCat', [ 'slug' => $category->id . '-' . $category->alias ], false) ] = $category->level_delimiter . " " . $category->title;
 			}

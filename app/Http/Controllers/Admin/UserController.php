@@ -1,12 +1,12 @@
 <?php
-	
-	namespace App\Http\Controllers;
+
+namespace App\Http\Controllers\Admin;
 	
 	use App\Group;
     use App\Http\Requests\AdminUserRequest;
     use App\User;
     
-    class AdminUserController extends AdminController
+    class UserController extends AdminController
     {
 		/**
 		 * Display a listing of the resource.

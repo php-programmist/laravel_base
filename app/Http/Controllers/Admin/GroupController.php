@@ -1,11 +1,11 @@
 <?php
-	
-	namespace App\Http\Controllers;
+
+namespace App\Http\Controllers\Admin;
 	
 	use App\Group;
     use Illuminate\Http\Request;
     
-    class AdminGroupController extends AdminController
+    class GroupController extends AdminController
     {
 		/**
 		 * Display a listing of the resource.

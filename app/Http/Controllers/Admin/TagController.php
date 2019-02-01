@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Tag;
 use Illuminate\Http\Request;
 
-class AdminTagController extends AdminController
+class TagController extends AdminController
 {
     /**
      * Display a listing of the resource.

@@ -1,11 +1,11 @@
 <?php
-	
-	namespace App\Http\Controllers;
+
+namespace App\Http\Controllers\Admin;
 	
 	use App\Category;
     use Illuminate\Http\Request;
     
-    class AdminCategoryController extends AdminController
+    class CategoryController extends AdminController
     {
 		/**
 		 * Display a listing of the resource.

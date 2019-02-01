@@ -1,6 +1,6 @@
 <?php
-	
-	namespace App\Http\Controllers;
+
+namespace App\Http\Controllers\Admin;
 	
 	//use Illuminate\Http\Request;
 	//use App\User;
@@ -9,8 +9,9 @@
     use Auth;
     
     //use Intervention\Image\Facades\Image;
-	
-	class AdminArticleController extends AdminController{
+    
+    class ArticleController extends AdminController
+    {
 		
 		/**
 		 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -38,8 +39,8 @@
 			if( !\Auth::user()->canDo('EDIT_ARTICLES') ){
                 return redirect()->back()->with(['warning' => __('system.not_allowed_update')])->withInput();
 			}
-			
-			$categories = AdminCategoryController::getCategoriesList();
+            
+            $categories = CategoryController::getCategoriesList();
 			
 			$this->vars['article']    = $article;
 			$this->vars['categories'] = $categories;
@@ -57,8 +58,8 @@
 			if( !\Auth::user()->canDo('ADD_ARTICLES') ){
                 return redirect()->back()->with(['warning' => __('system.not_allowed_create')])->withInput();
 			}
-			
-			$categories = AdminCategoryController::getCategoriesList();
+            
+            $categories = CategoryController::getCategoriesList();
 			
 			$this->vars['article']    = $article;
 			$this->vars['categories'] = $categories;
