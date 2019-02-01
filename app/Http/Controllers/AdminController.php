@@ -37,6 +37,7 @@
 					if( $user->canDo('VIEW_COMMENTS') ){
 						$articles->add('Комментарии', array( 'route' => 'admin.comments.index' ));
 					}
+                    $articles->add('Тэги', array('route' => 'admin.tags.index'));
 				}
 				
 				if( $user->canDo('VIEW_MENU') ){
