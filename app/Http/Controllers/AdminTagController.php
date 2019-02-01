@@ -48,6 +48,7 @@ class AdminTagController extends AdminController
     {
         $tag = new Tag();
         $tag->setTitle($request->get('title'));
+        $tag->setAlias($request->get('alias'));
         try{
             $tag->save();
         } catch (\Exception $e){
@@ -87,6 +88,7 @@ class AdminTagController extends AdminController
     {
         $tag = Tag::find($id);
         $tag->setTitle($request->get('title'));
+        $tag->setAlias($request->get('alias'));
         try{
             $tag->save();
         } catch (\Exception $e){

@@ -25,4 +25,12 @@ class Tag extends Model
     {
         $this->title = $title;
     }
+    
+    public function setAlias($alias)
+    {
+        if (empty($alias) AND ! empty($this->title)) {
+            $alias = str_slug($this->title);
+        }
+        $this->alias = $alias;
+    }
 }
