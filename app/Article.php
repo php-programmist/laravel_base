@@ -3,9 +3,10 @@
 	namespace App;
 	
 	use Illuminate\Database\Eloquent\Model;
-	use Intervention\Image\Facades\Image;
-	
-	class Article extends Model {
+    use Intervention\Image\Facades\Image;
+    
+    class Article extends Model
+    {
 		protected $fillable = [
 			'name', 'alias', 'image', 'intro_text', 'full_text', 'state', 'user_id', 'category_id',
 		];
@@ -21,6 +22,11 @@
 		public function comments() {
 			return $this->hasMany('App\Comment');
 		}
+        
+        public function tags()
+        {
+            return $this->belongsToMany('App\Tag', 'article_tag', 'article_id', 'tag_id');
+        }
 		
 		public function prepare($request) {
 			if ( empty($this->alias) AND !empty($this->name) ) {
