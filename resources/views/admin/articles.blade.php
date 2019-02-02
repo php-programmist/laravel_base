@@ -21,6 +21,7 @@
                         <th>{{__('system.created_at')}}</th>
                         <th>{{__('system.link')}}</th>
                         <th></th>
+                        <th></th>
                     </tr>
                     @foreach($articles as $article)
                         <tr>
@@ -34,7 +35,12 @@
                             </td>
                             <td>{{ $article->created_at->format('d.m.Y H:i') }}</td>
                             <td><a target="_blank"
+                                   class="btn btn-info"
                                    href="{{ route('articles',$article->id.'-'.$article->alias) }}">{{ __('system.preview') }}</a>
+                            </td>
+                            <td>
+                                <a class="btn btn-success"
+                                   href="{{ route('admin.revisions',$article->id) }}">{{ __('system.revisions') }}</a>
                             </td>
                             <td>
                                 {!! Form::open([
@@ -43,7 +49,7 @@
                                     'method'=>'DELETE'
                                 ]) !!}
                                 {!! Form::button(__('system.delete'),['class'=>'btn btn-xs btn-danger','type'=>'submit']) !!}
-
+        
                                 {!! Form::close() !!}
                             </td>
                         </tr>

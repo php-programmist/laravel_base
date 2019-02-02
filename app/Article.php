@@ -27,7 +27,7 @@
     
         public function revisions()
         {
-            return $this->hasMany('App\Revisions');
+            return $this->hasMany('App\Revision')->orderBy('id', 'desc');
         }
         
         public function tags()

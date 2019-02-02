@@ -33,5 +33,9 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], 
     Route::resource('/comments', 'Admin\CommentController');
     Route::resource('/tags', 'Admin\TagController');
     Route::resource('/groups', 'Admin\GroupController');
+    
+    Route::get('/revision/{article_id}', 'Admin\RevisionController@index')->name('revisions');
+    Route::post('/revision/{revision_id}', 'Admin\RevisionController@restore')->name('revision.restore');
+    Route::delete('/revision/{revision_id}', 'Admin\RevisionController@destroy')->name('revision.destroy');
 });
 	
