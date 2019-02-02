@@ -10,6 +10,8 @@
 		protected $fillable = [
 			'name', 'alias', 'image', 'intro_text', 'full_text', 'state', 'user_id', 'category_id',
 		];
+    
+        public $versioned = ['name', 'alias', 'intro_text', 'full_text', 'user_id', 'category_id'];
 		
 		public function user() {
 			return $this->belongsTo('App\User');
@@ -22,10 +24,28 @@
 		public function comments() {
 			return $this->hasMany('App\Comment');
 		}
+    
+        public function revisions()
+        {
+            return $this->hasMany('App\Revisions');
+        }
         
         public function tags()
         {
             return $this->belongsToMany('App\Tag', 'article_tag', 'article_id', 'tag_id');
+        }
+    
+        public function save(array $options = [])
+        {
+            if ( ! $this->id) {
+                if ( ! parent::save($options)) {
+                    return false;
+                }
+            }
+            $revision          = new Revision();
+            $this->revision_id = $revision->makeRevision($this, \Auth::user()->id);
+        
+            return parent::save($options);
         }
 		
 		public function prepare($request) {
