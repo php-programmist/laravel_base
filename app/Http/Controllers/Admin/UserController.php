@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 	
 	use App\Group;
-    use App\Http\Requests\AdminUserRequest;
+    use App\Http\Requests\Admin\UserRequest;
     use App\User;
     
     class UserController extends AdminController
@@ -50,11 +50,12 @@ namespace App\Http\Controllers\Admin;
 		/**
 		 * Store a newly created resource in storage.
 		 *
-		 * @param  \App\Http\Requests\AdminUserRequest $request
+         * @param  \App\Http\Requests\Admin\UserRequest $request
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function store(AdminUserRequest $request){
+        public function store(UserRequest $request)
+        {
 			if( !\Auth::user()->canDo('ADD_USERS') ){
                 return redirect()->back()->with(['warning' => __('system.not_allowed_create')])->withInput();
 			}
@@ -99,12 +100,13 @@ namespace App\Http\Controllers\Admin;
 		/**
 		 * Update the specified resource in storage.
 		 *
-		 * @param  \Illuminate\Http\Request $request
+         * @param  \App\Http\Requests\Admin\UserRequest
 		 * @param  int                      $id
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function update(AdminUserRequest $request, $id){
+        public function update(UserRequest $request, $id)
+        {
 			if( !\Auth::user()->canDo('EDIT_USERS') ){
                 return redirect()->back()->with(['warning' => __('system.not_allowed_update')])->withInput();
 			}
