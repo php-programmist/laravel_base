@@ -5,31 +5,20 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<title>{{ $title }}</title>
-	<!-- Scripts -->
-{{--<script src="{{ asset('js/app.js') }}" defer></script>--}}
-<!-- Latest compiled and minified CSS -->
-	<!-- Bootstrap core JavaScript -->
+	
 	<script src="{{ asset('jquery/jquery.min.js') }}"></script>
 	
-	<script src="{{ asset('bootstrap/js/bootstrap.js') }}"></script>
-	{{--<script src="{{ asset('js/bootstrap.min.js') }}"></script>--}}
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
 	
 	<script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 	
-	{{--<script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>--}}
 	<script src="{{ asset('bootstrap/js/bootstrap-4-navbar.js') }}"></script>
-	{{--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-		  integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">--}}
 
-
-<!-- Latest compiled and minified JavaScript -->
-	{{--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-			integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
-			crossorigin="anonymous"></script>--}}
-<!-- Styles -->
-	{{--<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">--}}
 	<link href="{{ asset('bootstrap/css/bootstrap.css') }}" rel="stylesheet">
 	<link href="{{ asset('bootstrap/css/bootstrap-4-hover-navbar.css') }}" rel="stylesheet">
+	<link rel="stylesheet"
+		  href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 	<link href="{{ asset('css/admin.css') }}" rel="stylesheet">
 
 </head>
