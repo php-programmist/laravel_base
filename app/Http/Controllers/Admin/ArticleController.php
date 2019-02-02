@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 //use Illuminate\Http\Request;
 use App\Article;
-use App\Http\Requests\AdminArticleRequest;
+use App\Http\Requests\Admin\ArticleRequest;
 use App\Tag;
 use Auth;
 
@@ -44,9 +44,7 @@ class ArticleController extends AdminController
         }
         
         $categories = CategoryController::getCategoriesList();
-        $tags       = Tag::all()
-                         ->pluck('title', 'id')
-                         ->all();
+        $tags       = Tag::getOptions();
         $article->load('tags');
         $this->vars['article']      = $article;
         $this->vars['categories']   = $categories;
@@ -69,10 +67,8 @@ class ArticleController extends AdminController
         }
         
         $categories = CategoryController::getCategoriesList();
-        
-        $tags = Tag::all()
-                   ->pluck('title', 'id')
-                   ->all();
+    
+        $tags = Tag::getOptions();
         
         $this->vars['article']      = $article;
         $this->vars['categories']   = $categories;
@@ -86,12 +82,12 @@ class ArticleController extends AdminController
     }
     
     /**
-     * @param AdminArticleRequest $request
-     * @param Article             $article
+     * @param ArticleRequest $request
+     * @param Article        $article
      *
      * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function update(AdminArticleRequest $request, Article $article)
+    public function update(ArticleRequest $request, Article $article)
     {
         
         $user = Auth::user();
@@ -111,11 +107,11 @@ class ArticleController extends AdminController
     }
     
     /**
-     * @param AdminArticleRequest $request
+     * @param ArticleRequest $request
      *
      * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function store(AdminArticleRequest $request)
+    public function store(ArticleRequest $request)
     {
         $article = new Article();
         

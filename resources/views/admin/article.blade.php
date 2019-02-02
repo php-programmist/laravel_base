@@ -61,7 +61,6 @@
 		<script>
 			CKEDITOR.replace('editor', {
 				language: '{{app()->getLocale()}}'
-				
 			});
 			
 			$('.filestyle').filestyle({

@@ -33,4 +33,9 @@ class Tag extends Model
         }
         $this->alias = $alias;
     }
+    
+    public static function getOptions()
+    {
+        return self::all()->pluck('title', 'id')->all();
+    }
 }
