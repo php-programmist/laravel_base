@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\Admin\TagRequest;
 use App\Tag;
-use Illuminate\Http\Request;
 
 class TagController extends AdminController
 {
@@ -40,11 +40,11 @@ class TagController extends AdminController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Http\Requests\Admin\TagRequest $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TagRequest $request)
     {
         $tag = new Tag();
         $tag->setTitle($request->get('title'));
@@ -79,12 +79,12 @@ class TagController extends AdminController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int                      $id
+     * @param  \App\Http\Requests\Admin\TagRequest $request
+     * @param  int                                 $id
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TagRequest $request, $id)
     {
         $tag = Tag::find($id);
         $tag->setTitle($request->get('title'));
@@ -109,8 +109,6 @@ class TagController extends AdminController
      */
     public function destroy(Tag $tag)
     {
-        //$tag = Tag::findOrFail($id);
-        
         try{
             $tag->delete();
         } catch (\Exception $e){
