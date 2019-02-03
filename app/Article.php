@@ -4,7 +4,7 @@
     
     use App\Helpers\ImageHelper;
     use Illuminate\Database\Eloquent\Model;
-    
+
     class Article extends Model
     {
         protected $fillable = [
@@ -40,22 +40,14 @@
             return $this->hasMany('App\Revision')->orderBy('id', 'desc');
         }
     
+        /*public function revision()
+        {
+            return $this->belongsTo('App\Revision');
+        }*/
+    
         public function tags()
         {
             return $this->belongsToMany('App\Tag', 'article_tag', 'article_id', 'tag_id');
-        }
-    
-        public function save(array $options = [])
-        {
-            if ( ! $this->id) {
-                if ( ! parent::save($options)) {
-                    return false;
-                }
-            }
-            $revision          = new Revision();
-            $this->revision_id = $revision->makeRevision($this, \Auth::user()->id);
-        
-            return parent::save($options);
         }
     
         public function prepare($request)

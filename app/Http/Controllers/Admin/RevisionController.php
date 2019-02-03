@@ -9,27 +9,24 @@ class RevisionController extends AdminController
 {
     public function index($article_id)
     {
-        $article = Article::find($article_id);
-        $article->load('revisions')->with('user');
-        $this->vars['article'] = $article;
-        $this->title           = $article->name . ". " . __('system.revisions');
-        $this->template        = 'admin.revisions';
+        $article   = Article::find($article_id);
+        $revisions = Revision::getRevisionsOfArticle($article_id);
+    
+        $this->vars     = compact('article', 'revisions');
+        $this->title    = $article->name . ". " . __('system.revisions');
+        $this->template = 'admin.revisions';
         
         return $this->renderOutput();
     }
     
     public function restore($revision_id)
     {
-        $revision      = Revision::find($revision_id);
-        $article       = $revision->article;
-        $revision_data = (array)json_decode($revision->revision_data);
-        $article->fill($revision_data);
+        $revision = Revision::withoutGlobalScope('active')->whereId($revision_id)->first();
         try{
-            $article->save();
+            $revision->restore();
         } catch (\Exception $e){
-            session()->flash('error', trans('system.errors_occurred'));
+            return redirect()->back()->with(['error' => __('system.errors_occurred') . ": " . $e->getMessage()]);
         }
-        
         return redirect()->back()->with(['success' => __('system.restore_success')]);
     }
     

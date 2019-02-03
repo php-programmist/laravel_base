@@ -8,7 +8,7 @@
 
 @section('content')
 	
-	@if ($article->revisions)
+	@if ($revisions)
 		<div class="table-responsive">
 			<table class="table table-striped table-bordered">
 				<tr>
@@ -18,11 +18,11 @@
 					<th></th>
 					<th></th>
 				</tr>
-				@foreach($article->revisions as $revision)
+				@foreach($revisions as $revision)
 					<tr>
 						<td>{{ $revision->id }}</td>
 						<td>{{ $revision->created_at->format('d.m.Y H:i') }}
-							@if($article->revision_id == $revision->id )
+							@if($revision->is_active)
 								<i class="fa fa-star" style="color:gold" aria-hidden="true"></i>
 							@endif
 						</td>
@@ -51,7 +51,8 @@
 				@endforeach
 			</table>
 		</div>
-	
+	@else
+		<h3>{{__('system.no_revisions')}}</h3>
 	@endif
 
 
